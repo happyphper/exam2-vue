@@ -38,14 +38,14 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/form',
+    path: '/users',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        name: 'userIndex',
+        component: () => import('@/views/users/index'),
+        meta: { title: '用户管理', icon: 'form' }
       }
     ]
   },

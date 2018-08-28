@@ -49,6 +49,26 @@ export const constantRouterMap = [
       }
     ]
   },
+
+  {
+    path: '/questions',
+    component: Layout,
+    meta: { title: '题库管理', icon: 'example' },
+    children: [
+      {
+        path: 'index',
+        name: 'questionIndex',
+        component: () => import('@/views/questions/index'),
+        meta: { title: '题库列表', icon: 'form' }
+      },
+      {
+        path: 'create',
+        name: 'questionForm',
+        component: () => import('@/views/questions/create'),
+        meta: { title: '添加题目', icon: 'form' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

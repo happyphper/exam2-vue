@@ -118,11 +118,5 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .block {
-    width: 100%;
-    text-align: center;
-  }
-  .search-bar {
-    padding: 10px 0 10px 0;
-  }
+
 </style>

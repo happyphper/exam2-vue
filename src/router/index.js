@@ -30,10 +30,22 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/dashboard',
     name: 'Dashboard',
-    hidden: true,
+    hidden: false,
     children: [{
       path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '控制台', icon: 'example' }
+    }]
+  },
+
+  {
+    path: '/categories',
+    component: Layout,
+    name: 'Category',
+    children: [{
+      path: 'index',
+      component: () => import('@/views/categories/index'),
+      meta: { title: '分类管理', icon: 'example' }
     }]
   },
 

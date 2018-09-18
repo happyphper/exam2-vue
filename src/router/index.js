@@ -63,6 +63,19 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/tests',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'testIndex',
+        component: () => import('@/views/tests/index'),
+        meta: { title: '考试管理', icon: 'form' }
+      }
+    ]
+  },
+
+  {
     path: '/questions',
     component: Layout,
     meta: { title: '题库管理', icon: 'example' },

@@ -76,6 +76,19 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/groups',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'groupIndex',
+        component: () => import('@/views/groups/index'),
+        meta: { title: '班级管理', icon: 'form' }
+      }
+    ]
+  },
+
+  {
     path: '/questions',
     component: Layout,
     meta: { title: '题库管理', icon: 'example' },

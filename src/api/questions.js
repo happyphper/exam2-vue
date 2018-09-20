@@ -15,3 +15,18 @@ export function storeQuestion(data) {
     data
   })
 }
+
+export function updateQuestion(questionId, data) {
+  return request({
+    url: `/questions/${questionId}`,
+    method: 'put',
+    data
+  })
+}
+
+export function deleteQuestion(questionId) {
+  return request({
+    url: `/questions/${questionId}`,
+    method: 'delete'
+  })
+}

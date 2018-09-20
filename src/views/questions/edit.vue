@@ -50,7 +50,7 @@
       </el-row>
       
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button type="primary" @click="onSubmit">立即更新</el-button>
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
@@ -58,10 +58,18 @@
 </template>
 
 <script>
-  import { storeQuestion } from '@/api/questions'
+  import { updateQuestion } from '@/api/questions'
   
   export default {
-    name: 'questionCreate',
+    name: 'questionEdit',
+    created() {
+      this.form.title = this.question.title
+      this.form.type = this.question.type
+      this.form.options = this.question.options
+      this.form.answers = this.question.answers
+      this.form.explain = this.question.explain
+    },
+    props: ['question'],
     data() {
       return {
         activeTab: 'text',
@@ -83,9 +91,14 @@
     methods: {
       onSubmit() {
         this.loading = true
-        storeQuestion(this.form).then((response) => {
-          this.$message.success('添加成功')
-          this.$emit('created', response)
+        updateQuestion(this.question.id, this.form).then(() => {
+          this.$message.success('更新成功')
+          this.question.title = this.form.title
+          this.question.type = this.form.type
+          this.question.options = this.form.options
+          this.question.answers = this.form.answers
+          this.question.explain = this.form.explain
+          this.$emit('updated')
         }).finally(() => {
           this.loading = false
         })

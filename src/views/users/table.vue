@@ -140,8 +140,8 @@
         this.groupName && (queryString['group:name'] = `%${this.groupName}%`)
         this.group && (queryString['group_id'] = this.group.id)
         queryString.include = this.include
-        queryString[this.sort.prop] = this.order
-        queryString.page = this.page
+        queryString.sort = `${this.sort.prop},${this.order}`
+        queryString.page = this.currentPage
         queryString.per_page = this.perPage
         this.loading = true
         getUsers(queryString).then(response => {

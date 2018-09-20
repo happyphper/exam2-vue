@@ -15,3 +15,18 @@ export function storeGroup(data) {
     data
   })
 }
+
+export function updateGroup(groupId, data) {
+  return request({
+    url: `/groups/${groupId}`,
+    method: 'put',
+    data
+  })
+}
+
+export function deleteGroup(groupId) {
+  return request({
+    url: `/groups/${groupId}`,
+    method: 'delete'
+  })
+}

@@ -11,7 +11,7 @@
           </el-input>
         </el-col>
         <el-col :span="2">
-          <el-button type="success" icon="el-icon-plus" @click="createGroup" circle></el-button>
+          <el-button type="success" icon="el-icon-plus" @click="showGroupCreateComponent" circle></el-button>
         </el-col>
       </el-row>
     </div>
@@ -28,9 +28,21 @@
       <el-table-column
         label="操作">
         <template slot-scope="scope">
-          <el-button @click="showUserTableComponent(scope.row)" icon="el-icon-more" size="small">成员</el-button>
-          <el-button @click="importUsers(scope.row)" icon="el-icon-upload" size="small">导入</el-button>
-          <el-button @click="showUserCreateComponent(scope.row)" icon="el-icon-plus" size="small">添加</el-button>
+          <el-tooltip class="item" effect="dark" content="编编" placement="top">
+            <el-button @click="showGroupEditComponent(scope.row)" icon="el-icon-edit" size="small"></el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="删除" placement="top">
+            <el-button @click="handleDeleteGroup(scope.row, scope.$index)" icon="el-icon-delete" size="small"></el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="成员" placement="top">
+            <el-button @click="showUserTableComponent(scope.row)" icon="el-icon-more" size="small"></el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="导入" placement="top">
+            <el-button @click="importUsers(scope.row)" icon="el-icon-upload" size="small"></el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="添加" placement="top">
+            <el-button @click="showUserCreateComponent(scope.row)" icon="el-icon-plus" size="small"></el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -46,14 +58,21 @@
         :total="total">
       </el-pagination>
     </div>
-    
+    <!--GroupCreateModal-->
+    <el-dialog title="提示" :visible.sync="groupCreateStatus" width="50%">
+      <GroupCreate @created="groupCreated" :key="Date.now()"></GroupCreate>
+    </el-dialog>
+    <!--GroupEditModal-->
+    <el-dialog title="提示" :visible.sync="groupEditStatus" width="50%">
+      <GroupEdit :group="groupEditBindGroup" @updated="groupUpdated" :key="Date.now()"></GroupEdit>
+    </el-dialog>
     <!--UserCreateModal-->
     <el-dialog title="提示" :visible.sync="userCreateStatus" width="50%">
-      <UserCreate :group="userCreateBindGroup" @created="newUser" :key="Date.now()"></UserCreate>
+      <UserCreate :group="userCreateBindGroup" @created="userCreated" :key="Date.now()"></UserCreate>
     </el-dialog>
     <!--UserTableModal-->
-    <el-dialog title="提示" :visible.sync="userTableStatus" width="80%">
-      <UserTable :group="userTableBindGroup" @remove="removeUser" :key="Date.now()"></UserTable>
+    <el-dialog title="提示" :visible.sync="userTableStatus" width="90%">
+      <UserTable :group="userTableBindGroup" @deleted="userDeleted" :key="Date.now()"></UserTable>
     </el-dialog>
   </div>
 </template>
@@ -61,13 +80,17 @@
 <script>
   import UserCreate from '@/views/users/create'
   import UserTable from '@/views/users/table'
-  import { getGroups, storeGroup } from '@/api/groups'
+  import GroupCreate from '@/views/groups/create'
+  import GroupEdit from '@/views/groups/edit'
+  import { getGroups, deleteGroup } from '@/api/groups'
   
   export default {
     name: 'groups',
     components: {
       UserCreate,
-      UserTable
+      UserTable,
+      GroupCreate,
+      GroupEdit
     },
     created() {
       getGroups().then(response => {
@@ -94,7 +117,10 @@
         userCreateStatus: false,
         userCreateBindGroup: null,
         userTableStatus: false,
-        userTableBindGroup: null
+        userTableBindGroup: null,
+        groupCreateStatus: false,
+        groupEditStatus: false,
+        groupEditBindGroup: null
       }
     },
     methods: {
@@ -107,23 +133,36 @@
       handleSortChange({ column, prop, order }) {
         this.sort = { prop, order }
       },
-      createGroup() {
-        this.$prompt('请输入班级名称', '提示', {
+      showGroupCreateComponent() {
+        this.groupCreateStatus = true
+      },
+      groupCreated(group) {
+        this.groupCreateStatus = false
+        this.tableData.push(group)
+      },
+      showGroupEditComponent(group) {
+        this.groupEditBindGroup = group
+        this.groupEditStatus = true
+      },
+      groupUpdated() {
+        this.groupEditStatus = false
+      },
+      handleDeleteGroup(group, index) {
+        this.$confirm('将永久删除该群组，并删除该群组下所有学员，是否继续？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
-        }).then(({ value }) => {
-          return storeGroup({ name: value })
-        }).then(response => {
-          this.$message.success('添加成功')
-          this.tableData.push(response)
+        }).then(() => {
+          return deleteGroup(group.id)
+        }).then(() => {
+          this.$message.success('删除成功')
+          this.tableData.splice(index, 1)
         })
       },
-      importUsers(group) {},
       showUserCreateComponent(group) {
         this.userCreateBindGroup = group
         this.userCreateStatus = !this.userCreateStatus
       },
-      newUser() {
+      userCreated() {
         this.userCreateStatus = false
         this.userCreateBindGroup.users_count++
       },
@@ -131,10 +170,8 @@
         this.userTableStatus = true
         this.userTableBindGroup = group
       },
-      removeUser() {
-        this.userTableStatus = false
-        this.userCreateBindGroup.users_count--
-      }
+      userDeleted() {},
+      importUsers(group) {}
     }
   }
 </script>

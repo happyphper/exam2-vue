@@ -14,7 +14,7 @@
           </el-input>
         </el-col>
         <el-col :span="6">
-          <el-input placeholder="请输入群组名称" v-model="groupName">
+          <el-input placeholder="请输入群组名称" v-model="groupName" :disabled="disableGroupSearch">
             <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
           </el-input>
         </el-col>
@@ -57,8 +57,12 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click="showUserEditComponent(scope.row, scope.$index)" icon="el-icon-edit" size="small">编辑</el-button>
-          <el-button @click="handleRemove(scope.row, scope.$index)" icon="el-icon-trash" size="small">删除</el-button>
+          <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+            <el-button @click="showUserEditComponent(scope.row)" icon="el-icon-edit" size="small"></el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="删除" placement="top">
+            <el-button @click="handleDelete(scope.row, scope.$index)" icon="el-icon-delete" size="small"></el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -75,11 +79,11 @@
     </div>
     <!--UserCreate-->
     <el-dialog title="提示" :visible.sync="userCreateStatus" width="50%">
-      <UserCreate :group="userCreateBindGroup" @created="createUser" :key="Date.now()"></UserCreate>
+      <UserCreate :group="userCreateBindGroup" @created="userCreated" :key="Date.now()"></UserCreate>
     </el-dialog>
     <!--UserEdit-->
     <el-dialog title="提示" :visible.sync="userEditStatus" width="50%">
-      <UserEdit :user="userEditBindUser" @updated="updateUser" :key="Date.now()"></UserEdit>
+      <UserEdit :user="userEditBindUser" @updated="userUpdated" :key="Date.now()"></UserEdit>
     </el-dialog>
   </div>
 </template>
@@ -93,12 +97,16 @@
   export default {
     name: 'usersTable',
     created() {
+      if (this.group) {
+        this.disableGroupSearch = true
+      }
       this.fetchUsers()
     },
     components: {
       UserCreate,
       UserEdit
     },
+    props: ['group'],
     data() {
       return {
         tableData: [],
@@ -115,12 +123,14 @@
         },
         include: 'group',
         groupName: null,
+        groupId: null,
         loading: false,
         userCreateStatus: false,
         userCreateBindGroup: null,
         userEditStatus: false,
         userEditBindUser: null,
-        userEditIndex: null
+        userEditIndex: null,
+        disableGroupSearch: false
       }
     },
     methods: {
@@ -128,6 +138,7 @@
         const queryString = {}
         this.query.value && (queryString[this.query.label] = `%${this.query.value}%`)
         this.groupName && (queryString['group:name'] = `%${this.groupName}%`)
+        this.group && (queryString['group_id'] = this.group.id)
         queryString.include = this.include
         queryString[this.sort.prop] = this.order
         queryString.page = this.page
@@ -157,7 +168,7 @@
         this.sort = { prop, order }
         this.fetchUsers()
       },
-      handleRemove(user, index) {
+      handleDelete(user, index) {
         this.$confirm(`此操作将永久删除 ${user.name} 用户, 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -166,23 +177,23 @@
           return deleteUser(user.id)
         }).then(() => {
           this.$message.success('删除成功')
+          this.group && this.group.users_count--
           this.tableData.splice(index, 1)
         })
       },
       showUserCreateComponent() {
         this.userCreateStatus = true
       },
-      createUser(newUser) {
-        this.tableData.push(newUser)
+      userCreated(user) {
+        this.userCreateStatus = false
+        this.tableData.push(user)
       },
-      showUserEditComponent(user, index) {
-        this.userEditIndex = index
+      showUserEditComponent(user) {
         this.userEditBindUser = user
         this.userEditStatus = true
       },
-      updateUser(newUser) {
+      userUpdated() {
         this.userEditStatus = false
-        this.tableData.splice(this.userEditIndex, 1, newUser)
       }
     }
   }

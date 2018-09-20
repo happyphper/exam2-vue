@@ -85,8 +85,12 @@
         this.loading = true
         updateUser(this.user.id, this.form).then(() => {
           this.$message.success('更新成功')
-          const newUser = { ...this.user, ...this.form }
-          this.$emit('updated', newUser)
+          this.user.name = this.form.name
+          this.user.email = this.form.email
+          this.user.student_id = this.form.student_id
+          this.user.phone = this.form.phone
+          this.user.group_id = this.form.group_id
+          this.$emit('updated')
           this.resetForm('form')
         }).finally(() => {
           this.loading = false

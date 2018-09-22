@@ -20,9 +20,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="班级" prop="group_id">
-            <el-select v-model="form.group_id" filterable default-first-option placeholder="请输入班级" :remote="true" :remote-method="fetchGroups" :loading="selectLoading">
-              <el-option v-for="item in selectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
+            <el-tag v-for="group in user.groups.data" :key="group.id" style="margin-right: 0.5rem;">{{ group.name }}</el-tag>
           </el-form-item>
         </el-col>
       </el-row>
@@ -53,17 +51,14 @@
 
 <script>
   import { updateUser } from '@/api/users'
-  import { getGroups } from '@/api/groups'
   
   export default {
     name: 'userEdit',
     created() {
       this.form.name = this.user.name
       this.form.email = this.user.email
-      this.form.student_id = this.user.name
+      this.form.student_id = this.user.student_id
       this.form.phone = this.user.phone
-      this.form.group_id = this.user.group_id
-      this.user.group && this.selectList.push(this.user.group)
     },
     props: ['user'],
     data() {
@@ -71,26 +66,18 @@
         form: {
           name: null,
           email: null,
-          group_id: null,
           student_id: null,
           phone: null
         },
-        loading: false,
-        selectLoading: false,
-        selectList: []
+        loading: false
       }
     },
     methods: {
       onSubmit() {
         this.loading = true
-        updateUser(this.user.id, this.form).then(() => {
+        updateUser(this.user.id, this.form).then(response => {
           this.$message.success('更新成功')
-          this.user.name = this.form.name
-          this.user.email = this.form.email
-          this.user.student_id = this.form.student_id
-          this.user.phone = this.form.phone
-          this.user.group_id = this.form.group_id
-          this.$emit('updated')
+          this.$emit('updated', response)
           this.resetForm('form')
         }).finally(() => {
           this.loading = false
@@ -98,18 +85,6 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields()
-      },
-      fetchGroups(query) {
-        if (query !== '') {
-          this.selectLoading = true
-          getGroups({ name: `%${query}%` }).then(response => {
-            this.selectList = response.data
-          }).finally(() => {
-            this.selectLoading = false
-          })
-        } else {
-          this.selectList = []
-        }
       }
     }
   }

@@ -39,8 +39,7 @@
         this.loading = true
         updateGroup(this.group.id, this.form).then(response => {
           this.$message.success('更新成功')
-          this.group.name = this.form.name
-          this.$emit('updated')
+          this.$emit('updated', response)
           this.resetForm('form')
         }).finally(() => {
           this.loading = false

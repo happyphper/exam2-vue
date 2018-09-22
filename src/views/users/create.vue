@@ -35,16 +35,6 @@
       
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="班级" prop="group_id">
-            <el-select v-model="form.group_id" filterable default-first-option placeholder="请输入班级">
-              <el-option v-for="item in selectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      
-      <el-row :gutter="20">
-        <el-col :span="12">
           <el-form-item label="学号" prop="student_id">
             <el-input v-model="form.student_id"></el-input>
           </el-form-item>
@@ -55,6 +45,14 @@
         <el-col :span="12">
           <el-form-item label="手机" prop="phone">
             <el-input v-model="form.phone"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+  
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="班级" prop="group_id">
+            <span>{{ group.name }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -69,12 +67,10 @@
 
 <script>
   import { storeUser } from '@/api/users'
-  // import { getGroups } from '@/api/groups'
   
   export default {
     name: 'userCreate',
     created() {
-      this.group && this.selectList.push(this.group)
       this.form.group_id = this.group.id
     },
     props: ['group'],
@@ -89,8 +85,7 @@
           student_id: null,
           phone: null
         },
-        loading: false,
-        selectList: []
+        loading: false
       }
     },
     methods: {

@@ -15,3 +15,18 @@ export function storeTest(data) {
     data
   })
 }
+
+export function updateTest(testId, data) {
+  return request({
+    url: `/tests/${testId}`,
+    method: 'put',
+    data
+  })
+}
+
+export function deleteTest(testId) {
+  return request({
+    url: `/tests/${testId}`,
+    method: 'delete'
+  })
+}

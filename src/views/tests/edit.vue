@@ -40,7 +40,7 @@
         </el-form-item>
       </el-col>
     </el-row>
-
+    
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="开始时间" prop="started_at">
@@ -48,7 +48,7 @@
         </el-form-item>
       </el-col>
     </el-row>
-
+    
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="结束时间" prop="ended_at">
@@ -56,21 +56,29 @@
         </el-form-item>
       </el-col>
     </el-row>
-
+    
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
+      <el-button type="primary" @click="onSubmit">立即更新</el-button>
       <el-button @click="resetForm('form')">重置表单</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
-  import { storeTest } from '@/api/tests'
+  import { updateTest } from '@/api/tests'
   import { getGroups } from '@/api/groups'
   
   export default {
-    name: 'createTest',
-    created() {},
+    name: 'testEdit',
+    created() {
+      this.groupSelectList = this.test.groups.data
+      this.form.title = this.test.title
+      this.form.type = this.test.type
+      this.form.started_at = this.test.started_at
+      this.form.ended_at = this.test.ended_at
+      this.test.groups.data.forEach(item => this.form.group_ids.push(item.id))
+    },
+    props: ['test'],
     data() {
       return {
         form: {
@@ -96,8 +104,8 @@
       },
       onSubmit() {
         this.loading = true
-        storeTest(this.form).then(response => {
-          this.$emit('created', response)
+        updateTest(this.test.id, this.form).then(response => {
+          this.$emit('updated', response)
         }).finally(() => {
           this.loading = false
         })

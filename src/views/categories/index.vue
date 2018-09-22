@@ -18,6 +18,7 @@
             <span>{{ node.data.name }}</span>
             <span>
               <el-button type="text" size="mini" @click="append(data)" class="primary">添加</el-button>
+              <el-button type="text" size="mini" @click="update(node, data)" class="primary">编辑</el-button>
               <el-button type="text" size="mini" @click="remove(node, data)" class="danger">删除</el-button>
             </span>
           </span>
@@ -28,11 +29,13 @@
 </template>
 
 <script>
-  import { getCategories, storeCategory, deleteCategory } from '@/api/categories'
+  import { getCategories, storeCategory, updateCategory, deleteCategory } from '@/api/categories'
+  import Cookies from 'js-cookie'
   
   export default {
     name: 'categories',
     created() {
+      this.type = this.categoryTab
       this.fetchCategories()
     },
     data() {
@@ -40,7 +43,12 @@
         type: 'group',
         treeData: [],
         loading: true,
-        types: { group: '群组分类', question: '题目分类' }
+        types: { group: '班级分类', question: '题目分类' }
+      }
+    },
+    computed: {
+      categoryTab() {
+        return Cookies.get('categoryTab') || this.type
       }
     },
     methods: {
@@ -54,6 +62,7 @@
       },
       // 切换卡片
       toggleTab() {
+        Cookies.set('categoryTab', this.type)
         this.fetchCategories()
       },
       // 添加
@@ -63,8 +72,8 @@
         this.$prompt(message, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          inputPattern: /^(.{1,10})$/,
-          inputErrorMessage: '字符限制 1~10 个'
+          inputPattern: /^(.{1,30})$/,
+          inputErrorMessage: '字符限制 1~30 个'
         }).then(({ value }) => {
           this.loading = true
           return storeCategory(this.type, { name: value, parent_id: data ? data.id : 0 })
@@ -76,6 +85,7 @@
             data.children.push(response)
           }
           this.$message.success('添加成功')
+          this.fetchCategories()
         }).catch(err => {
           console.log(err)
         }).finally(() => {
@@ -92,6 +102,26 @@
           this.$message.success('删除成功')
           this.fetchCategories()
         })
+      },
+      // 编辑
+      update(node, data) {
+        const message = `请输入新名字`
+        this.$prompt(message, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /^(.{1,30})$/,
+          inputErrorMessage: '字符限制 1~30 个'
+        }).then(({ value }) => {
+          this.loading = true
+          return updateCategory(this.type, data.id, { name: value })
+        }).then(response => {
+          this.$message.success('更新成功')
+          this.fetchCategories()
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+          this.loading = false
+        })
       }
     }
   }
@@ -103,5 +133,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
   }
 </style>

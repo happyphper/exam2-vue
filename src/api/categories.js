@@ -19,6 +19,14 @@ export function storeCategory(type, data) {
   })
 }
 
+export function updateCategory(type, categoryId, data) {
+  return request({
+    url: `${type}/categories/${categoryId}`,
+    method: 'put',
+    data
+  })
+}
+
 export function deleteCategory(type, category) {
   return request({
     url: `${type}/categories/${category}`,

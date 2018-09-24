@@ -63,6 +63,19 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/courses',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'courseIndex',
+        component: () => import('@/views/courses/index'),
+        meta: { title: '课程管理', icon: 'form' }
+      }
+    ]
+  },
+
+  {
     path: '/tests',
     component: Layout,
     children: [
@@ -91,19 +104,12 @@ export const constantRouterMap = [
   {
     path: '/questions',
     component: Layout,
-    meta: { title: '题库管理', icon: 'example' },
     children: [
       {
         path: 'index',
         name: 'questionIndex',
         component: () => import('@/views/questions/index'),
-        meta: { title: '题库列表', icon: 'form' }
-      },
-      {
-        path: 'create',
-        name: 'questionForm',
-        component: () => import('@/views/questions/create'),
-        meta: { title: '添加题目', icon: 'form' }
+        meta: { title: '题库管理', icon: 'form' }
       }
     ]
   },

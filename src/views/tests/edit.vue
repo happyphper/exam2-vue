@@ -16,6 +16,28 @@
         </el-form-item>
       </el-col>
     </el-row>
+  
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <el-form-item label="附属课程" prop="type">
+          <el-select
+            v-model="form.course_id"
+            filterable
+            remote
+            reserve-keyword
+            :remote-method="fetchCourses"
+            :loading="courseSelectListLoading"
+            placeholder="请输入关键字">
+            <el-option
+              v-for="course in courseSelectList"
+              :key="course.id"
+              :label="course.title"
+              :value="course.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+    </el-row>
     
     <el-row :gutter="20">
       <el-col :span="12">
@@ -28,7 +50,7 @@
             remote
             reserve-keyword
             :remote-method="fetchGroups"
-            :loading="selectLoading"
+            :loading="groupSelectListLoading"
             placeholder="请输入关键字">
             <el-option
               v-for="group in groupSelectList"
@@ -67,18 +89,22 @@
 <script>
   import { updateTest } from '@/api/tests'
   import { getGroups } from '@/api/groups'
+  import { getCourses } from '@/api/courses'
   
   export default {
     name: 'testEdit',
     created() {
-      this.groupSelectList = this.test.groups.data
       this.form.title = this.test.title
       this.form.type = this.test.type
       this.form.started_at = this.test.started_at
       this.form.ended_at = this.test.ended_at
+      this.groupSelectList = this.test.groups.data
       this.test.groups.data.forEach(item => this.form.group_ids.push(item.id))
+  
+      this.courseSelectList.push(this.test.course)
+      this.form.course_id = this.test.course.id
     },
-    props: ['test'],
+    props: ['test', 'course'],
     data() {
       return {
         form: {
@@ -86,20 +112,31 @@
           type: 'daily',
           started_at: '',
           ended_at: '',
+          course_id: null,
           group_ids: []
         },
         loading: false,
+        groupSelectListLoading: false,
         groupSelectList: [],
-        selectLoading: false
+        courseSelectListLoading: false,
+        courseSelectList: []
       }
     },
     methods: {
       fetchGroups(query) {
-        this.selectLoading = true
+        this.groupSelectListLoading = true
         getGroups({ name: `%${query}%`, per_page: 100 }).then(response => {
           this.groupSelectList = response.data
         }).finally(() => {
-          this.selectLoading = false
+          this.groupSelectListLoading = false
+        })
+      },
+      fetchCourses(query) {
+        this.courseSelectListLoading = true
+        getCourses({ title: `%${query}%`, per_page: 100 }).then(response => {
+          this.courseSelectList = response.data
+        }).finally(() => {
+          this.courseSelectListLoading = false
         })
       },
       onSubmit() {

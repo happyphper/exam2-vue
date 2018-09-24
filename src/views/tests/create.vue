@@ -19,6 +19,28 @@
     
     <el-row :gutter="20">
       <el-col :span="12">
+        <el-form-item label="附属课程" prop="type">
+          <el-select
+            v-model="form.course_id"
+            filterable
+            remote
+            reserve-keyword
+            :remote-method="fetchCourses"
+            :loading="courseSelectListLoading"
+            placeholder="请输入关键字">
+            <el-option
+              v-for="course in courseSelectList"
+              :key="course.id"
+              :label="course.title"
+              :value="course.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    
+    <el-row :gutter="20">
+      <el-col :span="12">
         <el-form-item label="考试班级" prop="groups">
           <el-select
             v-model="form.group_ids"
@@ -28,7 +50,7 @@
             remote
             reserve-keyword
             :remote-method="fetchGroups"
-            :loading="selectLoading"
+            :loading="groupSelectListLoading"
             placeholder="请输入关键字">
             <el-option
               v-for="group in groupSelectList"
@@ -66,6 +88,7 @@
 
 <script>
   import { storeTest } from '@/api/tests'
+  import { getCourses } from '@/api/courses'
   import { getGroups } from '@/api/groups'
   
   export default {
@@ -78,20 +101,31 @@
           type: 'daily',
           started_at: '',
           ended_at: '',
-          group_ids: []
+          group_ids: [],
+          course_id: null
         },
         loading: false,
+        groupSelectListLoading: false,
         groupSelectList: [],
-        selectLoading: false
+        courseSelectListLoading: false,
+        courseSelectList: []
       }
     },
     methods: {
       fetchGroups(query) {
-        this.selectLoading = true
+        this.groupSelectListLoading = true
         getGroups({ name: `%${query}%`, per_page: 100 }).then(response => {
           this.groupSelectList = response.data
         }).finally(() => {
-          this.selectLoading = false
+          this.groupSelectListLoading = false
+        })
+      },
+      fetchCourses(query) {
+        this.courseSelectListLoading = true
+        getCourses({ title: `%${query}%`, per_page: 100 }).then(response => {
+          this.courseSelectList = response.data
+        }).finally(() => {
+          this.courseSelectListLoading = false
         })
       },
       onSubmit() {

@@ -5,51 +5,40 @@
         <el-col :span="6">
           <el-input placeholder="请输入内容" v-model="query.value" class="input-with-select">
             <el-select v-model="query.label" slot="prepend" placeholder="请选择" style="width: 120px">
-              <el-option label="考试名称" value="title"></el-option>
-              <el-option label="班级名称" value="groups:name"></el-option>
-              <el-option label="课程名称" value="course:title"></el-option>
+              <el-option label="课程名称" value="title"></el-option>
             </el-select>
             <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
           </el-input>
         </el-col>
         <el-col :span="2">
-          <el-button  type="success" icon="el-icon-plus"  @click="showTestCreateComponent" circle></el-button>
+          <el-button type="success" icon="el-icon-plus" @click="showCourseCreateComponent" circle></el-button>
         </el-col>
       </el-row>
-      
+    
     </div>
     
     <el-table :data="tableData" border style="width: 100%" @sort-change="handleSortChange" v-loading="loading">
       <el-table-column
-        label="考试名称"
+        label="课程名称"
         prop="title">
       </el-table-column>
       <el-table-column
-        prop="type"
-        label="类型">
+        label="题目个数"
+        prop="questions_count">
       </el-table-column>
       <el-table-column
-        label="附属课程"
-        prop="course.title">
-      </el-table-column>
-      <el-table-column label="关联班级">
-        <template slot-scope="scope">
-          <el-tag v-for="group in scope.row.groups.data" :key="group.id">{{ group.name }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="started_at"
-        label="开始时间">
-      </el-table-column>
-      <el-table-column
-        prop="ended_at"
-        label="结束时间"
-        sortable="custom">
+        label="创建人"
+        prop="user.name">
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" content="添加题目" placement="top">
+            <el-button @click="showQuestionCreateComponent(scope.row)" icon="el-icon-plus"
+                       size="small"></el-button>
+          </el-tooltip>
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-            <el-button @click="showTestEditComponent(scope.row, scope.$index)" icon="el-icon-edit" size="small"></el-button>
+            <el-button @click="showCourseEditComponent(scope.row, scope.$index)" icon="el-icon-edit"
+                       size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
             <el-button @click="handleDelete(scope.row, scope.$index)" icon="el-icon-delete" size="small"></el-button>
@@ -71,30 +60,35 @@
     </div>
     
     <!--CreateModal-->
-    <el-dialog title="提示" :visible.sync="testCreateStatus" width="50%">
-      <TestCreate @created="testCreated" :key="Date.now()"></TestCreate>
+    <el-dialog title="提示" :visible.sync="courseCreateStatus" width="50%">
+      <CourseCreate @created="courseCreated" :key="Date.now()"></CourseCreate>
     </el-dialog>
     <!--EditModal-->
-    <el-dialog title="提示" :visible.sync="testEditStatus" width="50%">
-      <TestEdit :test="testEditBindTest" @updated="testUpdated" :key="Date.now()"></TestEdit>
+    <el-dialog title="提示" :visible.sync="courseEditStatus" width="50%">
+      <CourseEdit :course="courseEditBindCourse" @updated="courseUpdated" :key="Date.now()"></CourseEdit>
+    </el-dialog>
+    <!--QuestionCreateModal-->
+    <el-dialog title="提示" :visible.sync="questionCreateStatus" width="50%">
+      <QuestionCreate :course="questionCreateBindCourse" @updated="questionCreated" :key="Date.now()"></QuestionCreate>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import { getTests, deleteTest } from '@/api/tests'
-  
-  import TestCreate from './create'
-  import TestEdit from './edit'
+  import { getCourses, deleteCourse } from '@/api/courses'
+  import QuestionCreate from '@/views/questions/create'
+  import CourseCreate from './create'
+  import CourseEdit from './edit'
   
   export default {
-    name: 'testTable',
+    name: 'courseTable',
     components: {
-      TestCreate,
-      TestEdit
+      CourseCreate,
+      CourseEdit,
+      QuestionCreate
     },
     created() {
-      this.fetchTests()
+      this.fetchCourses()
     },
     data() {
       return {
@@ -112,14 +106,16 @@
         },
         include: null,
         loading: false,
-        testCreateStatus: false,
-        testEditStatus: false,
-        testEditBindTest: null,
-        testEditIndex: 0
+        courseCreateStatus: false,
+        courseEditStatus: false,
+        courseEditBindCourse: null,
+        courseEditIndex: 0,
+        questionCreateStatus: false,
+        questionCreateBindCourse: null
       }
     },
     methods: {
-      fetchTests() {
+      fetchCourses() {
         const queryString = {}
         this.query.value && (queryString[this.query.label] = `%${this.query.value}%`)
         queryString.include = this.include
@@ -127,7 +123,7 @@
         queryString.page = this.currentPage
         queryString.per_page = this.perPage
         this.loading = true
-        getTests(queryString).then(response => {
+        getCourses(queryString).then(response => {
           this.tableData = response.data
           this.currentPage = response.meta.pagination.current_page
           this.perPage = response.meta.pagination.per_page
@@ -137,7 +133,7 @@
         })
       },
       handleSearch() {
-        this.fetchTests()
+        this.fetchCourses()
       },
       handleSizeChange(pageNumber) {
         this.perPage = pageNumber
@@ -148,29 +144,37 @@
       handleSortChange({ column, prop, order }) {
         this.sort = { prop, order }
       },
-      showTestCreateComponent() {
-        this.testCreateStatus = true
+      showCourseCreateComponent() {
+        this.courseCreateStatus = true
       },
-      testCreated(response) {
+      courseCreated(response) {
         this.tableData.push(response)
-        this.testCreateStatus = false
+        this.courseCreateStatus = false
       },
-      showTestEditComponent(test, index) {
-        this.testEditBindTest = test
-        this.testEditIndex = index
-        this.testEditStatus = true
+      showCourseEditComponent(course, index) {
+        this.courseEditBindCourse = course
+        this.courseEditIndex = index
+        this.courseEditStatus = true
       },
-      testUpdated(response) {
-        this.testEditStatus = false
-        this.tableData.splice(this.testEditIndex, 1, response)
+      courseUpdated(response) {
+        this.courseEditStatus = false
+        this.tableData.splice(this.courseEditIndex, 1, response)
       },
-      handleDelete(test, index) {
-        this.$confirm(`此操作将 ${test.title} 考试删除, 是否继续?`, '提示', {
+      showQuestionCreateComponent(course) {
+        this.questionCreateBindCourse = course
+        this.questionCreateStatus = true
+      },
+      questionCreated() {
+        this.questionCreateBindCourse.questions_count++
+        this.questionCreateStatus = false
+      },
+      handleDelete(course, index) {
+        this.$confirm(`此操作将 ${course.title} 课程删除, 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          return deleteTest(test.id)
+          return deleteCourse(course.id)
         }).then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)

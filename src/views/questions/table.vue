@@ -26,7 +26,7 @@
           <el-row v-for="option in props.row.options" :key="option.id">
             <el-col :span="24">
               <el-form label-position="left" inline class="demo-table-expand">
-                <el-form-item :label="`选项 ${option.id}`" >
+                <el-form-item :label="`选项 ${option.id}`">
                   <span>{{ option.title }}</span>
                 </el-form-item>
               </el-form>
@@ -51,6 +51,14 @@
         label="解析">
       </el-table-column>
       <el-table-column
+        prop="wrong_count"
+        label="错误次数">
+      </el-table-column>
+      <el-table-column
+        prop="right_count"
+        label="正确次数">
+      </el-table-column>
+      <el-table-column
         prop="created_at"
         label="创建时间"
         sortable="custom">
@@ -62,7 +70,8 @@
             <el-button @click="showQuestionEditComponent(scope.row)" icon="el-icon-edit" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
-            <el-button @click="handleDeleteQuestion(scope.row, scope.$index)" icon="el-icon-delete" size="small"></el-button>
+            <el-button @click="handleDeleteQuestion(scope.row, scope.$index)" icon="el-icon-delete"
+                       size="small"></el-button>
           </el-tooltip>
         </template>
       </el-table-column>

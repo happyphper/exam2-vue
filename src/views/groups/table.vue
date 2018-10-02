@@ -38,7 +38,7 @@
             <el-button @click="showUserTableComponent(scope.row)" icon="el-icon-more" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="导入" placement="top">
-            <el-button @click="importUsers(scope.row)" icon="el-icon-upload" size="small"></el-button>
+            <el-button @click="showUploadExcelComponent(scope.row)" icon="el-icon-upload" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="添加" placement="top">
             <el-button @click="showUserCreateComponent(scope.row)" icon="el-icon-plus" size="small"></el-button>
@@ -58,21 +58,29 @@
         :total="total">
       </el-pagination>
     </div>
-    <!--GroupCreateModal-->
+    <!--Modal-->
     <el-dialog title="提示" :visible.sync="groupCreateStatus" width="50%">
       <GroupCreate @created="groupCreated" :key="Date.now()"></GroupCreate>
     </el-dialog>
-    <!--GroupEditModal-->
+    <!--Modal-->
     <el-dialog title="提示" :visible.sync="groupEditStatus" width="50%">
       <GroupEdit :group="groupEditBindGroup" @updated="groupUpdated" :key="Date.now()"></GroupEdit>
     </el-dialog>
-    <!--UserCreateModal-->
+    <!--Modal-->
     <el-dialog title="提示" :visible.sync="userCreateStatus" width="50%">
       <UserCreate :group="userCreateBindGroup" @created="userCreated" :key="Date.now()"></UserCreate>
     </el-dialog>
-    <!--UserTableModal-->
+    <!--Modal-->
     <el-dialog title="提示" :visible.sync="userTableStatus" width="90%">
       <UserTable :group="userTableBindGroup" @deleted="userDeleted" :key="Date.now()"></UserTable>
+    </el-dialog>
+    <!--Modal-->
+    <el-dialog title="提示" :visible.sync="uploadExcelStatus" width="90%">
+      <UploadExcel :onSuccess="excelUploaded"></UploadExcel>
+    </el-dialog>
+    <!--Modal-->
+    <el-dialog title="提示" :visible.sync="groupImportStatus" width="90%">
+      <GroupImport :group="groupImportBindGroup" @created="importCreated" :data="groupImportBindData" :headers="groupImportBindHeaders"></GroupImport>
     </el-dialog>
   </div>
 </template>
@@ -82,6 +90,9 @@
   import UserTable from '@/views/users/table'
   import GroupCreate from '@/views/groups/create'
   import GroupEdit from '@/views/groups/edit'
+  import UploadExcel from '@/components/UploadExcel'
+  import GroupImport from '@/views/groups/import'
+  
   import { getGroups, deleteGroup } from '@/api/groups'
   
   export default {
@@ -90,7 +101,9 @@
       UserCreate,
       UserTable,
       GroupCreate,
-      GroupEdit
+      GroupEdit,
+      UploadExcel,
+      GroupImport
     },
     created() {
       this.fetchGroups()
@@ -117,7 +130,12 @@
         groupCreateStatus: false,
         groupEditStatus: false,
         groupEditBindGroup: null,
-        groupEditIndex: null
+        groupEditIndex: null,
+        uploadExcelStatus: false,
+        groupImportBindGroup: null,
+        groupImportBindHeaders: [],
+        groupImportBindData: [],
+        groupImportStatus: false
       }
     },
     methods: {
@@ -189,7 +207,20 @@
         this.userTableBindGroup = group
       },
       userDeleted() {},
-      importUsers(group) {}
+      showUploadExcelComponent(group) {
+        this.groupImportBindGroup = group
+        this.uploadExcelStatus = true
+      },
+      excelUploaded(excelData) {
+        this.groupImportBindHeaders = excelData.header
+        this.groupImportBindData = excelData.results
+        this.uploadExcelStatus = false
+        this.groupImportStatus = true
+      },
+      importCreated(count) {
+        console.log(this.groupImportBindGroup.users_count, count)
+        this.groupImportBindGroup.users_count += count
+      }
     }
   }
 </script>

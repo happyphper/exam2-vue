@@ -84,6 +84,13 @@ export const constantRouterMap = [
         name: 'testIndex',
         component: () => import('@/views/tests/index'),
         meta: { title: '考试管理', icon: 'form' }
+      },
+      {
+        path: '/tests/:test/paper',
+        name: 'testPaper',
+        hidden: true,
+        component: () => import('@/views/tests/paper'),
+        meta: { title: '考题管理', icon: 'form' }
       }
     ]
   },

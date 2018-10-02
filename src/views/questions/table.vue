@@ -11,10 +11,8 @@
             <el-option label="多选" value="multiple"></el-option>
           </el-select>
         </el-col>
-        <el-col :span="2">
-          <el-button icon="el-icon-search" @click="handleSearch"></el-button>
-        </el-col>
-        <el-col :span="2">
+        <el-col :span="4" :offset="2">
+          <el-button icon="el-icon-search" circle @click="handleSearch"></el-button>
           <el-button type="success" icon="el-icon-plus" circle @click="showQuestionCreateComponent"></el-button>
         </el-col>
       </el-row>
@@ -71,13 +69,21 @@
       <el-table-column
         label="操作">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-            <el-button @click="showQuestionEditComponent(scope.row)" icon="el-icon-edit" size="small"></el-button>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="删除" placement="top">
-            <el-button @click="handleDeleteQuestion(scope.row, scope.$index)" icon="el-icon-delete"
-                       size="small"></el-button>
-          </el-tooltip>
+          <template v-if="testId">
+            <el-tooltip class="item" effect="dark" content="添加" placement="top">
+              <el-button @click="handleAddQuestionToTest(scope.row)" icon="el-icon-plus"
+                         size="small"></el-button>
+            </el-tooltip>
+          </template>
+          <template v-else>
+            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+              <el-button @click="showQuestionEditComponent(scope.row)" icon="el-icon-edit" size="small"></el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="删除" placement="top">
+              <el-button @click="handleDeleteQuestion(scope.row, scope.$index)" icon="el-icon-delete"
+                         size="small"></el-button>
+            </el-tooltip>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -98,25 +104,27 @@
     </el-dialog>
     <!--QuestionEditModal-->
     <el-dialog title="提示" :visible.sync="questionEditStatus" width="80%">
-      <QuestioEdit :question="questionEditBindQuestion" @updated="questionUpdated" :key="Date.now()"></QuestioEdit>
+      <QuestionEdit :question="questionEditBindQuestion" @updated="questionUpdated" :key="Date.now()"></QuestionEdit>
     </el-dialog>
   </div>
 </template>
 
 <script>
   import QuestionCreate from '@/views/questions/create'
-  import QuestioEdit from '@/views/questions/edit'
+  import QuestionEdit from '@/views/questions/edit'
   import { getQuestions, deleteQuestion } from '@/api/questions'
+  import { storeTestQuestion } from '@/api/testQuestions'
   
   export default {
     name: 'questionTable',
     components: {
       QuestionCreate,
-      QuestioEdit
+      QuestionEdit
     },
     created() {
       this.fetchQuestions()
     },
+    props: ['testId'],
     data() {
       return {
         tableData: [],
@@ -159,7 +167,7 @@
         this.perPage = pageNumber
       },
       handleCurrentChange(currentPage) {
-        this.page = currentPage
+        this.currentPage = currentPage
       },
       handleSortChange({ column, prop, order }) {
         this.sort = { prop, order }
@@ -190,6 +198,25 @@
         }).then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
+        })
+      },
+      handleAddQuestionToTest(question) {
+        let score = 0
+        this.$prompt('请输入分值', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /[\d]/,
+          inputErrorMessage: '只能是数值'
+        }).then(({ value }) => {
+          this.loading = true
+          score = value
+          return storeTestQuestion(this.testId, question.id, value)
+        }).then(() => {
+          this.$message.success('添加成功')
+          question.score = score
+          this.$emit('created', question)
+        }).finally(() => {
+          this.loading = false
         })
       }
     }

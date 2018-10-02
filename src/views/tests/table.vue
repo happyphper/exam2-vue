@@ -16,7 +16,6 @@
           <el-button  type="success" icon="el-icon-plus"  @click="showTestCreateComponent" circle></el-button>
         </el-col>
       </el-row>
-      
     </div>
     
     <el-table :data="tableData" border style="width: 100%" @sort-change="handleSortChange" v-loading="loading">
@@ -45,6 +44,16 @@
         prop="ended_at"
         label="结束时间"
         sortable="custom">
+      </el-table-column>
+      <el-table-column
+        label="考题">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" content="考题" placement="top">
+            <el-button type="success" size="small">
+              <router-link :to="{ name: 'testPaper', params: { test: scope.row.id }}">考题</router-link>
+            </el-button>
+          </el-tooltip>
+        </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -86,10 +95,12 @@
   
   import TestCreate from './create'
   import TestEdit from './edit'
+  import Paper from '@/views/tests/paper'
   
   export default {
     name: 'testTable',
     components: {
+      Paper,
       TestCreate,
       TestEdit
     },

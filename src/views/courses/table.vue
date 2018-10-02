@@ -69,7 +69,7 @@
     </el-dialog>
     <!--QuestionCreateModal-->
     <el-dialog title="提示" :visible.sync="questionCreateStatus" width="50%">
-      <QuestionCreate :course="questionCreateBindCourse" @updated="questionCreated" :key="Date.now()"></QuestionCreate>
+      <QuestionCreate :course="questionCreateBindCourse" @created="questionCreated" :key="Date.now()"></QuestionCreate>
     </el-dialog>
   </div>
 </template>

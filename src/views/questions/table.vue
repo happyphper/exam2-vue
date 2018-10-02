@@ -64,6 +64,11 @@
         sortable="custom">
       </el-table-column>
       <el-table-column
+        prop="created_at"
+        label="创建时间"
+        sortable="custom">
+      </el-table-column>
+      <el-table-column
         label="操作">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">

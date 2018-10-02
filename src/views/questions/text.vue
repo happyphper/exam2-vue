@@ -12,8 +12,7 @@
               :remote-method="fetchCourses"
               :loading="courseSelectListLoading"
               placeholder="请输入关键字"
-              :disabled="courseSelectListDisabled"
-            >
+              :disabled="courseSelectListDisabled">
               <el-option
                 v-for="course in courseSelectList"
                 :key="course.id"
@@ -129,7 +128,8 @@
         this.loading = true
         storeQuestion(this.form).then((response) => {
           this.$message.success('添加成功')
-          this.$emit('created', response)
+          this.$emit('textCreated', response)
+          console.log('text')
         }).finally(() => {
           this.loading = false
         })

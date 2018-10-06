@@ -10,6 +10,9 @@ const auth = {
   },
 
   mutations: {
+    SET_ID: (state, id) => {
+      state.id = id
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
@@ -42,6 +45,7 @@ const auth = {
     Me({ commit, state }) {
       return new Promise((resolve, reject) => {
         me(state.token).then(response => {
+          commit('SET_ID', response.id)
           commit('SET_NAME', response.name)
           commit('SET_AVATAR', response.avatar)
           resolve(response)

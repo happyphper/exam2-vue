@@ -11,6 +11,13 @@ export function bulk(groupId, data) {
   })
 }
 
+export function getUserGroups() {
+  return request({
+    url: `/manage-groups`,
+    method: 'get'
+  })
+}
+
 export function storeUserGroup(userId, groupId) {
   return request({
     url: `/users/${userId}/groups/${groupId}`,

@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">负责班级:
-      <el-tag v-for="course in courses" :key="course.id">{{ course.name }}</el-tag>
+      <el-tag v-for="course in courses" :key="course.id">{{ course.title }}</el-tag>
     </div>
     <div class="dashboard-text">负责课程:
       <el-tag v-for="group in groups" :key="group.id">{{ group.name }}</el-tag>

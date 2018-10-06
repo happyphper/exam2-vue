@@ -24,16 +24,14 @@
         prop="title">
       </el-table-column>
       <el-table-column
-        prop="type"
-        label="类型">
-      </el-table-column>
-      <el-table-column
         label="附属课程"
         prop="course.title">
       </el-table-column>
       <el-table-column label="关联班级">
         <template slot-scope="scope">
-          <el-tag v-for="group in scope.row.groups.data" :key="group.id">{{ group.name }}</el-tag>
+          <el-button size="small" v-for="group in scope.row.groups.data" :key="group.id">
+            <router-link :to="{ name: 'testResultIndex', params: { testId: scope.row.id, groupId: group.id }}">{{ group.name }}</router-link>
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -121,7 +119,7 @@
           label: 'title',
           value: null
         },
-        include: null,
+        include: 'groups',
         loading: false,
         testCreateStatus: false,
         testEditStatus: false,

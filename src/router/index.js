@@ -120,6 +120,19 @@ export const constantRouterMap = [
       }
     ]
   },
+
+  {
+    path: '/tests/:testId/groups/:groupId/results',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        name: 'testResultIndex',
+        component: () => import('@/views/testResults/index')
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

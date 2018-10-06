@@ -41,7 +41,7 @@
         label="类型">
       </el-table-column>
       <el-table-column
-        prop="answers"
+        prop="answer"
         label="答案选项">
       </el-table-column>
       <el-table-column

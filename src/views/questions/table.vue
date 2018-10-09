@@ -25,7 +25,8 @@
             <el-col :span="24">
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item :label="`选项 ${option.id}`">
-                  <span>{{ option.title }}</span>
+                  <span v-if="option.type === 'text'"></span>
+                  <img :src="option.content" width="100" v-else />
                 </el-form-item>
               </el-form>
             </el-col>
@@ -179,6 +180,7 @@
         this.questionCreateStatus = true
       },
       questionCreated(question) {
+        console.log('here')
         this.questionCreateStatus = false
         this.tableData.push(question)
       },

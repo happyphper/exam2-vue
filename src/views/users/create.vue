@@ -19,22 +19,6 @@
     
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="form.password" type="password"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="确认密码" prop="password_confirmation">
-            <el-input v-model="form.password_confirmation" type="password"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      
-      <el-row :gutter="20">
-        <el-col :span="12">
           <el-form-item label="学号" prop="student_id">
             <el-input v-model="form.student_id"></el-input>
           </el-form-item>
@@ -79,8 +63,6 @@
         form: {
           name: null,
           email: null,
-          password: null,
-          password_confirmation: null,
           group_id: null,
           student_id: null,
           phone: null

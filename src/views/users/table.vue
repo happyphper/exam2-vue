@@ -202,7 +202,6 @@
         this.tableData.push(user)
       },
       showUserEditComponent(user, index) {
-        console.log(index)
         this.userEditBindUser = user
         this.userEditIndex = index
         this.userEditStatus = true

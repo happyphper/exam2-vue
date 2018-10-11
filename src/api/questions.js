@@ -16,11 +16,12 @@ export function storeQuestion(data) {
   })
 }
 
-export function updateQuestion(questionId, data) {
+export function updateQuestion(questionId, data, params = null) {
   return request({
     url: `/questions/${questionId}`,
     method: 'put',
-    data
+    data,
+    params
   })
 }
 

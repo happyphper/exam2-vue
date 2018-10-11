@@ -1,9 +1,17 @@
 <template>
   <div>
+    <el-table :data="data" border style="width: 100%" v-loading="loading">
+      <el-table-column v-for="(head, index) in headers"
+                       :key="index"
+                       :label="head"
+                       :prop="head">
+      </el-table-column>
+    </el-table>
+    <br>
     <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
     <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
-      Drop excel file here or
-      <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">Browse</el-button>
+      <el-button :loading="loading" style="margin-left:16px;" size="large" type="primary" @click="handleUpload">点击上传
+      </el-button>
     </div>
   </div>
 </template>
@@ -23,7 +31,9 @@
         excelData: {
           header: null,
           results: null
-        }
+        },
+        headers: ['name', 'email', 'student_id', 'phone', 'password'],
+        data: [{ name: '姓名（必填）', student_id: '学号（必填）', email: '邮箱（选填）', phone: '手机（选填）', password: '密码（选填）' }]
       }
     },
     methods: {
@@ -125,11 +135,12 @@
 </script>
 
 <style scoped>
-  .excel-upload-input{
+  .excel-upload-input {
     display: none;
     z-index: -9999;
   }
-  .drop{
+  
+  .drop {
     border: 2px dashed #bbb;
     width: 600px;
     height: 160px;

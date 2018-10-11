@@ -3,7 +3,10 @@
     <div class="search-bar">
       <el-row :gutter="20">
         <el-col :span="4">
-          <el-input placeholder="请输入题目信息" v-model="query.title"></el-input>
+          <el-input placeholder="请输入题目关键字" v-model="query.title"></el-input>
+        </el-col>
+        <el-col :span="4">
+          <el-input placeholder="请输入课程关键字" v-model="query.courseTitle"></el-input>
         </el-col>
         <el-col :span="4">
           <el-select v-model="query.type" placeholder="请选择类型">
@@ -25,7 +28,7 @@
             <el-col :span="24">
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item :label="`选项 ${option.id}`">
-                  <span v-if="option.type === 'text'"></span>
+                  <span v-if="option.type === 'text'">{{ option.content }}</span>
                   <img :src="option.content" width="100" v-else />
                 </el-form-item>
               </el-form>
@@ -40,6 +43,10 @@
       <el-table-column
         prop="type"
         label="类型">
+      </el-table-column>
+      <el-table-column
+        prop="course.title"
+        label="课程">
       </el-table-column>
       <el-table-column
         prop="answer"
@@ -100,11 +107,11 @@
       </el-pagination>
     </div>
     <!--QuestionCreateModal-->
-    <el-dialog title="提示" :visible.sync="questionCreateStatus" width="80%">
+    <el-dialog title="提示" :visible.sync="questionCreateStatus" :fullscreen="true">
       <QuestionCreate @created="questionCreated" :key="Date.now()"></QuestionCreate>
     </el-dialog>
     <!--QuestionEditModal-->
-    <el-dialog title="提示" :visible.sync="questionEditStatus" width="80%">
+    <el-dialog title="提示" :visible.sync="questionEditStatus" :fullscreen="true">
       <QuestionEdit :question="questionEditBindQuestion" @updated="questionUpdated" :key="Date.now()"></QuestionEdit>
     </el-dialog>
   </div>
@@ -137,8 +144,10 @@
           order: 'desc'
         },
         query: {
-          name: null,
-          type: null
+          courseTitle: '',
+          title: null,
+          type: null,
+          include: 'course'
         },
         loading: false,
         questionCreateStatus: false,
@@ -150,7 +159,9 @@
       fetchQuestions() {
         const queryString = {}
         this.query.title && (queryString.title = `%${this.query.title}%`)
+        this.query.courseTitle && (queryString['course:title'] = `%${this.query.courseTitle}%`)
         this.query.type && (queryString.type = this.query.type)
+        this.query.include && (queryString.include = this.query.include)
         queryString.page = this.currentPage
         queryString.per_page = this.perPage
         queryString.sort = `${this.sort.prop},${this.sort.order}`
@@ -188,7 +199,8 @@
         this.questionEditBindQuestion = question
         this.questionEditStatus = true
       },
-      questionUpdated() {
+      questionUpdated(question) {
+        this.tableData.splice(this.tableData.findIndex(item => item.id === question.id), 1, question)
         this.questionEditStatus = false
       },
       handleDeleteQuestion(question, index) {

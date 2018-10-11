@@ -11,7 +11,7 @@
               reserve-keyword
               :remote-method="fetchCourses"
               :loading="courseSelectListLoading"
-              placeholder="请输入关键字"
+              placeholder="请输入关键字自动搜索"
               :disabled="courseSelectListDisabled">
               <el-option
                 v-for="course in courseSelectList"

@@ -11,7 +11,7 @@
               reserve-keyword
               :remote-method="fetchCourses"
               :loading="courseSelectListLoading"
-              placeholder="请输入关键字"
+              placeholder="请输入关键字自动搜索"
               :disabled="courseSelectListDisabled">
               <el-option
                 v-for="course in courseSelectList"
@@ -44,7 +44,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="答案">
-            <span>{{ form.answers }}</span>
+            <span>{{ form.answer }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -61,7 +61,7 @@
         <el-form-item :label="`选项 ${option.id}`">
           <el-input class="hidden" type="hidden" v-model="form.options[index].id" :value="option.id"></el-input>
           <el-col :span="12">
-            <el-input placeholder="内容" v-model="form.options[index].title"></el-input>
+            <el-input placeholder="内容" v-model="form.options[index].content"></el-input>
           </el-col>
           <el-col :span="3">
             <el-tooltip class="item" effect="dark" :content="option.right ? '取消正确答案' : '设置正确答案'" placement="right">
@@ -106,7 +106,7 @@
             { id: 3, content: '', type: 'text', right: false },
             { id: 4, content: '', type: 'text', right: false }
           ],
-          answers: [],
+          answer: [],
           explain: ''
         },
         loading: false,
@@ -137,20 +137,20 @@
       toggleAnswer(option) {
         // 单选
         if (this.form.type === 'single') {
-          if (this.form.answers.includes(option.id)) {
-            this.form.answers.splice(this.form.answers.indexOf(option.id), 1)
+          if (this.form.answer.includes(option.id)) {
+            this.form.answer.splice(this.form.answer.indexOf(option.id), 1)
             option.right = false
           } else {
-            this.form.answers.length < 1 && this.form.answers.push(option.id) && (option.right = true)
+            this.form.answer.length < 1 && this.form.answer.push(option.id) && (option.right = true)
           }
         }
         // 多选
         if (this.form.type === 'multiple') {
-          if (this.form.answers.includes(option.id)) {
-            this.form.answers.splice(this.form.answers.indexOf(option.id), 1)
+          if (this.form.answer.includes(option.id)) {
+            this.form.answer.splice(this.form.answer.indexOf(option.id), 1)
             option.right = false
           } else {
-            this.form.answers.push(option.id)
+            this.form.answer.push(option.id)
             option.right = true
           }
         }

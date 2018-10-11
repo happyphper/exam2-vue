@@ -75,7 +75,7 @@
       <UserTable :group="userTableBindGroup" @deleted="userDeleted" :key="Date.now()"></UserTable>
     </el-dialog>
     <!--Modal-->
-    <el-dialog title="提示" :visible.sync="uploadExcelStatus" width="90%">
+    <el-dialog title="导入示例" :visible.sync="uploadExcelStatus" width="90%">
       <UploadExcel :onSuccess="excelUploaded"></UploadExcel>
     </el-dialog>
     <!--Modal-->
@@ -218,7 +218,7 @@
         this.groupImportStatus = true
       },
       importCreated(count) {
-        console.log(this.groupImportBindGroup.users_count, count)
+        this.groupImportStatus = false
         this.groupImportBindGroup.users_count += count
       }
     }

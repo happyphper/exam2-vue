@@ -1,7 +1,9 @@
 <template>
   <div class="login-container">
     <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
-      <h3 class="title">考评系统</h3>
+      <h3 class="title">
+        <img src="/static/long_logo.png" alt="" width="300"style="background: aliceblue;">
+      </h3>
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
@@ -22,8 +24,7 @@
         </el-button>
       </el-form-item>
       <div class="tips">
-        <span style="margin-right:20px;">管理：admin</span>
-        <span style="margin-right:20px;">密码：123456</span>
+        <span style="margin-right:20px;">忘记密码？</span>
       </div>
     </el-form>
   </div>

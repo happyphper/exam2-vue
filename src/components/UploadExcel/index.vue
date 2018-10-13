@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-table :data="data" border style="width: 100%" v-loading="loading">
-      <el-table-column v-for="(head, index) in headers"
+    <el-table :data="exampleData" border style="width: 100%" v-loading="loading">
+      <el-table-column v-for="(head, index) in exampleHeaders"
                        :key="index"
                        :label="head"
                        :prop="head">
@@ -22,6 +22,8 @@
   export default {
     name: 'importExcel',
     props: {
+      exampleHeaders: Array,
+      exampleData: Array,
       beforeUpload: Function, // eslint-disable-line
       onSuccess: Function// eslint-disable-line
     },
@@ -31,9 +33,7 @@
         excelData: {
           header: null,
           results: null
-        },
-        headers: ['name', 'email', 'student_id', 'phone', 'password'],
-        data: [{ name: '姓名（必填）', student_id: '学号（必填）', email: '邮箱（选填）', phone: '手机（选填）', password: '密码（选填）' }]
+        }
       }
     },
     methods: {

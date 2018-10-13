@@ -14,7 +14,6 @@
           <el-button type="success" icon="el-icon-plus" @click="showCourseCreateComponent" circle></el-button>
         </el-col>
       </el-row>
-    
     </div>
     
     <el-table :data="tableData" border style="width: 100%" @sort-change="handleSortChange" v-loading="loading">
@@ -35,6 +34,9 @@
           <el-tooltip class="item" effect="dark" content="添加题目" placement="top">
             <el-button @click="showQuestionCreateComponent(scope.row)" icon="el-icon-plus"
                        size="small"></el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="导入" placement="top">
+            <el-button @click="showUploadExcelComponent(scope.row)" icon="el-icon-upload" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
             <el-button @click="showCourseEditComponent(scope.row, scope.$index)" icon="el-icon-edit"
@@ -71,10 +73,22 @@
     <el-dialog title="提示" :visible.sync="questionCreateStatus" width="50%">
       <QuestionCreate :course="questionCreateBindCourse" @created="questionCreated" :key="Date.now()"></QuestionCreate>
     </el-dialog>
+    <!--Modal-->
+    <el-dialog title="导入示例" :visible.sync="uploadExcelStatus" width="90%">
+      <UploadExcel :onSuccess="excelUploaded" :exampleHeaders="questionImportExampleHeaders"
+                   :exampleData="questionImportExampleData"></UploadExcel>
+    </el-dialog>
+    <!--Modal-->
+    <el-dialog title="提示" :visible.sync="questionImportStatus" width="90%">
+      <CourseImport :course="questionImportBindCourse" @created="importCreated" :data="questionImportBindData"
+                   :headers="questionImportBindHeaders"></CourseImport>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import UploadExcel from '@/components/UploadExcel'
+  import CourseImport from '@/views/courses/import'
   import { getCourses, deleteCourse } from '@/api/courses'
   import QuestionCreate from '@/views/questions/create'
   import CourseCreate from './create'
@@ -85,7 +99,9 @@
     components: {
       CourseCreate,
       CourseEdit,
-      QuestionCreate
+      QuestionCreate,
+      UploadExcel,
+      CourseImport
     },
     created() {
       this.fetchCourses()
@@ -111,7 +127,25 @@
         courseEditBindCourse: null,
         courseEditIndex: 0,
         questionCreateStatus: false,
-        questionCreateBindCourse: null
+        questionCreateBindCourse: null,
+        uploadExcelStatus: false,
+        questionImportBindCourse: null,
+        questionImportBindHeaders: null,
+        questionImportBindData: null,
+        questionImportStatus: null,
+        questionImportExampleHeaders: ['title', 'type', 'option1', 'option2', 'option3', 'option4', 'answer', 'explain'],
+        questionImportExampleData: [
+          {
+            title: '题干',
+            type: 'single/multiple(单选/多选)',
+            option1: '选项1',
+            option2: '选项2',
+            option3: '选项3',
+            option4: '选项4',
+            answer: '正确答案，如:1',
+            explain: '答案解析（选填）'
+          }
+        ]
       }
     },
     methods: {
@@ -179,6 +213,20 @@
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
         })
+      },
+      showUploadExcelComponent(course) {
+        this.questionImportBindCourse = course
+        this.uploadExcelStatus = true
+      },
+      excelUploaded(excelData) {
+        this.questionImportBindHeaders = excelData.header
+        this.questionImportBindData = excelData.results
+        this.uploadExcelStatus = false
+        this.questionImportStatus = true
+      },
+      importCreated(count) {
+        this.questionImportStatus = false
+        this.questionImportBindCourse.questions_count += count
       }
     }
   }

@@ -76,7 +76,7 @@
     </el-dialog>
     <!--Modal-->
     <el-dialog title="导入示例" :visible.sync="uploadExcelStatus" width="90%">
-      <UploadExcel :onSuccess="excelUploaded"></UploadExcel>
+      <UploadExcel :onSuccess="excelUploaded" :exampleHeaders="groupImportExampleHeaders" :exampleData="groupImportExampleData"></UploadExcel>
     </el-dialog>
     <!--Modal-->
     <el-dialog title="提示" :visible.sync="groupImportStatus" width="90%">
@@ -135,7 +135,9 @@
         groupImportBindGroup: null,
         groupImportBindHeaders: [],
         groupImportBindData: [],
-        groupImportStatus: false
+        groupImportStatus: false,
+        groupImportExampleHeaders: ['name', 'email', 'student_id', 'phone', 'password'],
+        groupImportExampleData: [{ name: '姓名（必填）', student_id: '学号（必填）', email: '邮箱（选填）', phone: '手机（选填）', password: '密码（选填）' }]
       }
     },
     methods: {

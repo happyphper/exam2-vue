@@ -16,6 +16,17 @@ export function storeQuestion(data) {
   })
 }
 
+export function bulk(course_id, questions) {
+  return request({
+    url: '/bulk-import-questions',
+    method: 'post',
+    data: {
+      course_id,
+      questions
+    }
+  })
+}
+
 export function updateQuestion(questionId, data, params = null) {
   return request({
     url: `/questions/${questionId}`,

@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getTestResults(testId, groupId, params) {
+export function getTestResults(params) {
   return request({
-    url: `/tests/${testId}/groups/${groupId}/results`,
+    url: '/test-results',
     method: 'get',
     params
   })

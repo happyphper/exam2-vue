@@ -2,67 +2,68 @@
   <div>
     <div class="search-bar">
       <el-row :gutter="20">
-        <el-col :span="6">
-          <el-input placeholder="请输入内容" v-model="query.value" class="input-with-select">
-            <el-select v-model="query.label" slot="prepend" placeholder="请选择" style="width: 120px">
-              <el-option label="考试名称" value="title"></el-option>
-              <el-option label="班级名称" value="groups:name"></el-option>
-              <el-option label="课程名称" value="course:title"></el-option>
-            </el-select>
-            <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
-          </el-input>
+        <el-col :span="4">
+          <el-input placeholder="考试名称" v-model="query.testTitle"></el-input>
+        </el-col>
+        <el-col :span="4">
+          <el-input placeholder="班级名称" v-model="query.groupName"></el-input>
+        </el-col>
+        <el-col :span="4">
+          <el-input placeholder="用户姓名" v-model="query.userName"></el-input>
+        </el-col>
+        <el-col :span="4">
+          <el-button icon="el-icon-search" @click="handleSearch"></el-button>
         </el-col>
       </el-row>
     </div>
     
     <el-table :data="tableData" border style="width: 100%" @sort-change="handleSortChange" v-loading="loading">
       <el-table-column
-        label="考试名称"
+        label="考试"
         prop="test.title">
       </el-table-column>
       <el-table-column
-        label="关联班级"
+        label="班级"
         prop="group.name">
       </el-table-column>
+      ¬
       <el-table-column
-        label="成绩"
-        prop="score">
+        label="学生"
+        prop="user.name">
       </el-table-column>
       <el-table-column
-        label="试卷分"
-        prop="total_score">
+        prop="wrong_count"
+        label="错题">
       </el-table-column>
       <el-table-column
-        label="题目个数"
-        prop="questions_count">
+        prop="right_count"
+        label="正确">
       </el-table-column>
       <el-table-column
-        label="错误个数"
-        prop="wrong_count">
+        prop="questions_count"
+        label="题目总数">
       </el-table-column>
       <el-table-column
-        label="正确个数"
-        prop="right_count">
+        prop="score"
+        label="成绩">
       </el-table-column>
       <el-table-column
-        label="已答题目"
-        prop="finished_count">
+        prop="score"
+        label="总分">
       </el-table-column>
       <el-table-column
         label="是否答完">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.is_finished" type="success">完成</el-tag>
-          <el-tag v-else type="warning">正在答题</el-tag>
+          <el-tag :type="scope.row.is_finished ? 'success' : 'warning'">{{ scope.row.is_finished ? '已交卷' : '答题中' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
         prop="created_at"
-        label="开始时间">
+        label="结束时间">
       </el-table-column>
       <el-table-column
         prop="updated_at"
-        label="结束时间"
-        sortable="custom">
+        label="结束时间">
       </el-table-column>
     </el-table>
     
@@ -84,7 +85,7 @@
   import { getTestResults } from '@/api/testResults'
   
   export default {
-    name: 'testResultIndex',
+    name: 'testResultTable',
     created() {
       this.fetchTestResults()
     },
@@ -99,27 +100,26 @@
           order: 'desc'
         },
         query: {
-          label: 'title',
-          value: null
+          testTitle: '',
+          groupName: '',
+          userName: ''
         },
-        include: 'test,group',
-        loading: false,
-        testCreateStatus: false,
-        testEditStatus: false,
-        testEditBindTest: null,
-        testEditIndex: 0
+        include: 'test,group,user',
+        loading: false
       }
     },
     methods: {
       fetchTestResults() {
         const queryString = {}
-        this.query.value && (queryString[this.query.label] = `%${this.query.value}%`)
+        this.query.testTitle && (queryString['test:title'] = `%${this.query.testTitle}%`)
+        this.query.groupName && (queryString['group:name'] = `%${this.query.groupName}%`)
+        this.query.userName && (queryString['user:name'] = `%${this.query.userName}%`)
         queryString.include = this.include
         queryString.sort = `${this.sort.prop},${this.sort.order}`
         queryString.page = this.currentPage
         queryString.per_page = this.perPage
         this.loading = true
-        getTestResults(this.$route.params.testId, this.$route.params.groupId, queryString).then(response => {
+        getTestResults(queryString).then(response => {
           this.tableData = response.data
           this.currentPage = response.meta.pagination.current_page
           this.perPage = response.meta.pagination.per_page
@@ -129,7 +129,7 @@
         })
       },
       handleSearch() {
-        this.fetchTests()
+        this.fetchTestResults()
       },
       handleSizeChange(pageNumber) {
         this.perPage = pageNumber

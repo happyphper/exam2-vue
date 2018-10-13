@@ -135,14 +135,15 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/tests/:testId/groups/:groupId/results',
+    path: '/test-results',
     component: Layout,
-    hidden: true,
+    hidden: false,
     children: [
       {
         path: 'index',
         name: 'testResultIndex',
-        component: () => import('@/views/testResults/index')
+        component: () => import('@/views/testResults/index'),
+        meta: { title: '考试记录', icon: 'form' }
       }
     ]
   },

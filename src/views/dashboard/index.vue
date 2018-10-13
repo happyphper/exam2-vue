@@ -2,48 +2,56 @@
   <div class="dashboard-container">
     <el-row :gutter="40" class="panel-group">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-message">
-            <svg-icon icon-class="course" class-name="card-panel-icon"/>
+        <router-link :to="{ name: 'courseIndex' }">
+          <div class="card-panel">
+            <div class="card-panel-icon-wrapper icon-message">
+              <svg-icon icon-class="course" class-name="card-panel-icon"/>
+            </div>
+            <div class="card-panel-description">
+              <div class="card-panel-text">管辖课程</div>
+              <count-to :start-val="0" :end-val="courses_count" :duration="2600" class="card-panel-num"/>
+            </div>
           </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">管辖课程</div>
-            <count-to :start-val="0" :end-val="courses_count" :duration="2600" class="card-panel-num"/>
-          </div>
-        </div>
+        </router-link>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon icon-class="classroom" class-name="card-panel-icon"/>
+        <router-link :to="{ name: 'groupIndex' }">
+          <div class="card-panel">
+            <div class="card-panel-icon-wrapper icon-people">
+              <svg-icon icon-class="classroom" class-name="card-panel-icon"/>
+            </div>
+            <div class="card-panel-description">
+              <div class="card-panel-text">负责班级</div>
+              <count-to :start-val="0" :end-val="classrooms_count" :duration="2600" class="card-panel-num"/>
+            </div>
           </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">负责班级</div>
-            <count-to :start-val="0" :end-val="classrooms_count" :duration="2600" class="card-panel-num"/>
-          </div>
-        </div>
+        </router-link>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-money">
-            <svg-icon icon-class="question" class-name="card-panel-icon" />
+        <router-link :to="{ name: 'questionIndex' }">
+          <div class="card-panel">
+            <div class="card-panel-icon-wrapper icon-money">
+              <svg-icon icon-class="question" class-name="card-panel-icon"/>
+            </div>
+            <div class="card-panel-description">
+              <div class="card-panel-text">创建题目</div>
+              <count-to :start-val="0" :end-val="questions_count" :duration="3200" class="card-panel-num"/>
+            </div>
           </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">题目数量</div>
-            <count-to :start-val="0" :end-val="questions_count" :duration="3200" class="card-panel-num"/>
-          </div>
-        </div>
+        </router-link>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-icon-wrapper icon-shopping">
-            <svg-icon icon-class="test" class-name="card-panel-icon" />
+        <router-link :to="{ name: 'testIndex' }">
+          <div class="card-panel">
+            <div class="card-panel-icon-wrapper icon-shopping">
+              <svg-icon icon-class="test" class-name="card-panel-icon"/>
+            </div>
+            <div class="card-panel-description">
+              <div class="card-panel-text">创建考试</div>
+              <count-to :start-val="0" :end-val="tests_count" :duration="3600" class="card-panel-num"/>
+            </div>
           </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">考试数量</div>
-            <count-to :start-val="0" :end-val="tests_count" :duration="3600" class="card-panel-num"/>
-          </div>
-        </div>
+        </router-link>
       </el-col>
     </el-row>
   </div>
@@ -72,6 +80,11 @@
         questions_count: 0,
         tests_count: 0,
         classrooms_count: 0
+      }
+    },
+    methods: {
+      goToRoute(routeName) {
+        this.$router.push({ name: routeName })
       }
     }
   }

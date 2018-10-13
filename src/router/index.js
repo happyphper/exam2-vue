@@ -122,6 +122,19 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/share-questions',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'shareQuestionIndex',
+        component: () => import('@/views/shareQuestions/index'),
+        meta: { title: '共享题库', icon: 'form' }
+      }
+    ]
+  },
+
+  {
     path: '/tests/:testId/groups/:groupId/results',
     component: Layout,
     hidden: true,

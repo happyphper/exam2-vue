@@ -2,12 +2,12 @@
   <div>
     <div class="search-bar">
       <el-row :gutter="20">
-        <el-col :span="4">
-          <el-input placeholder="考试名称" v-model="query.testTitle"></el-input>
-        </el-col>
-        <el-col :span="4">
-          <el-input placeholder="班级名称" v-model="query.groupName"></el-input>
-        </el-col>
+        <!--<el-col :span="4">-->
+          <!--<el-input placeholder="考试名称" v-model="query.testTitle"></el-input>-->
+        <!--</el-col>-->
+        <!--<el-col :span="4">-->
+          <!--<el-input placeholder="班级名称" v-model="query.groupName"></el-input>-->
+        <!--</el-col>-->
         <el-col :span="4">
           <el-input placeholder="用户姓名" v-model="query.userName"></el-input>
         </el-col>
@@ -26,10 +26,13 @@
         label="班级"
         prop="group.name">
       </el-table-column>
-      ¬
       <el-table-column
-        label="学生"
-        prop="user.name">
+        label="学生">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" content="成绩曲线" placement="top">
+            <el-button @click="showUserGradeCurveComponent(scope.row.user)">{{ scope.row.user.name }}</el-button>
+          </el-tooltip>
+        </template>
       </el-table-column>
       <el-table-column
         prop="wrong_count"
@@ -78,17 +81,30 @@
         :total="total">
       </el-pagination>
     </div>
+  
+    <!--Modal-->
+    <el-dialog title="提示" :visible.sync="userGradeCurveComponentStatus">
+      <UserGradeCurve :user="userGradeCurveBindUser"></UserGradeCurve>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import { getTestResults } from '@/api/testResults'
   
+  import UserGradeCurve from './components/UserGradeCurve'
+  
   export default {
     name: 'testResultTable',
+    components: {
+      UserGradeCurve
+    },
     created() {
+      this.query.testId = this.$route.query.testId
+      this.query.groupId = this.$route.query.groupId
       this.fetchTestResults()
     },
+    props: ['testId', 'groupId'],
     data() {
       return {
         tableData: [],
@@ -100,17 +116,24 @@
           order: 'desc'
         },
         query: {
+          testId: '',
+          groupId: '',
           testTitle: '',
           groupName: '',
           userName: ''
         },
         include: 'test,group,user',
-        loading: false
+        loading: false,
+        userGradeCurveBindUser: null,
+        userGradeCurveComponentStatus: false
       }
     },
     methods: {
       fetchTestResults() {
         const queryString = {}
+        this.query.testId && (queryString.test_id = this.query.testId)
+        this.query.groupId && (queryString.group_id = this.query.group_id)
+        this.query.testTitle && (queryString['test:title'] = `%${this.query.testTitle}%`)
         this.query.testTitle && (queryString['test:title'] = `%${this.query.testTitle}%`)
         this.query.groupName && (queryString['group:name'] = `%${this.query.groupName}%`)
         this.query.userName && (queryString['user:name'] = `%${this.query.userName}%`)
@@ -139,6 +162,10 @@
       },
       handleSortChange({ column, prop, order }) {
         this.sort = { prop, order }
+      },
+      showUserGradeCurveComponent(user) {
+        this.userGradeCurveBindUser = user
+        this.userGradeCurveComponentStatus = true
       }
     }
   }

@@ -1,21 +1,44 @@
 <template>
   <div class="app-container">
-    <TestResultTable></TestResultTable>
+    <el-row :gutter="50">
+      <el-col :span="12">
+        <el-card>
+          <ErrorQuestion :groupId="groupId" :testId="testId"></ErrorQuestion>
+        </el-card>
+      </el-col>
+      
+      <el-col :span="12">
+        <el-card>
+          <GradeDistribution :groupId="groupId" :testId="testId"></GradeDistribution>
+        </el-card>
+      </el-col>
+    </el-row>
+    
+    <TestResultTable :groupId="groupId" :testId="testId"></TestResultTable>
   </div>
 </template>
 
 <script>
+  import GradeDistribution from './components/GradeDistribution'
+  import ErrorQuestion from './components/ErrorQuestion'
+  
   import TestResultTable from './table'
   
   export default {
     name: 'testResults',
     components: {
+      GradeDistribution,
+      ErrorQuestion,
       TestResultTable
     },
-    data() {
-      return {}
-    },
-    methods: {}
+    computed: {
+      groupId() {
+        return this.$route.query.groupId
+      },
+      testId() {
+        return this.$route.query.testId
+      }
+    }
   }
 </script>
 

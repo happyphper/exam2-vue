@@ -137,7 +137,7 @@ export const constantRouterMap = [
   {
     path: '/test-results',
     component: Layout,
-    hidden: false,
+    hidden: true,
     children: [
       {
         path: 'index',
@@ -147,19 +147,7 @@ export const constantRouterMap = [
       }
     ]
   },
-  {
-    path: '/statistics',
-    component: Layout,
-    hidden: false,
-    children: [
-      {
-        path: 'index',
-        name: 'statisticIndex',
-        component: () => import('@/views/statistics/index'),
-        meta: { title: '统计分析', icon: 'form' }
-      }
-    ]
-  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 

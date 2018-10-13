@@ -27,10 +27,6 @@
         prop="title">
       </el-table-column>
       <el-table-column
-        prop="type"
-        label="类型">
-      </el-table-column>
-      <el-table-column
         prop="score"
         label="分值">
       </el-table-column>

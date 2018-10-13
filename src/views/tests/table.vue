@@ -30,7 +30,7 @@
       <el-table-column label="关联班级">
         <template slot-scope="scope">
           <el-button size="small" v-for="group in scope.row.groups.data" :key="group.id">
-            <router-link :to="{ name: 'testResultIndex', params: { testId: scope.row.id, groupId: group.id }}">{{ group.name }}</router-link>
+            <router-link :to="{ name: 'testResultIndex', query: { testId: scope.row.id, groupId: group.id }}">{{ group.name }}</router-link>
           </el-button>
         </template>
       </el-table-column>
@@ -119,7 +119,7 @@
           label: 'title',
           value: null
         },
-        include: 'groups',
+        include: 'groups,course',
         loading: false,
         testCreateStatus: false,
         testEditStatus: false,

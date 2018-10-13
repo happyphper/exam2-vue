@@ -1,28 +1,47 @@
 <template>
-  <div id="GradeDistribution" :style="{ width: '400px', height: '400px' }"></div>
+  <div id="GradeDistribution" :style="{ width: '400px', height: '400px' }" v-loading="loading"></div>
 </template>
 
 <script>
   import echarts from 'echarts'
   
+  import { getGradeDistribution } from '@/api/statistics'
+  
   export default {
     name: 'GradeDistribution',
-    mounted() {
-      this.draw()
+    props: ['testId', 'groupId'],
+    created() {
+      this.fetchData()
     },
     data() {
-      return {}
+      return {
+        loading: false,
+        data: [],
+        headers: [],
+        values: []
+      }
     },
     methods: {
+      fetchData() {
+        this.loading = true
+        getGradeDistribution(this.testId, this.groupId).then(response => {
+          this.data = response.data
+          this.headers = response.meta.headers
+          this.values = response.meta.values
+          this.draw()
+        }).finally(() => {
+          this.loading = false
+        })
+      },
       draw() {
         const chart = echarts.init(document.getElementById('GradeDistribution'))
         const option = {
-          title: { text: '成绩分布', subtext: '纯属虚构', x: 'center' },
+          title: { text: '成绩分布', x: 'center' },
           tooltip: { trigger: 'item', formatter: '{a} <br/>{b} : {c} ({d}%)' },
           legend: {
             orient: 'vertical',
             left: 'left',
-            data: ['60分以下', '60-69', '70 - 79', '80-89', '90-100']
+            data: this.headers
           },
           series: [
             {
@@ -30,13 +49,7 @@
               type: 'pie',
               radius: '55%',
               center: ['50%', '60%'],
-              data: [
-                { value: 335, name: '60分以下' },
-                { value: 310, name: '60-69' },
-                { value: 234, name: '70-79' },
-                { value: 135, name: '80-89' },
-                { value: 1548, name: '90-100' }
-              ],
+              data: this.data,
               itemStyle: {
                 emphasis: {
                   shadowBlur: 10,

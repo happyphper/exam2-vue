@@ -10,15 +10,6 @@
     
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="考试类型" prop="type">
-          <el-radio v-model="form.type" label="daily">日常测验</el-radio>
-          <el-radio v-model="form.type" label="random">随机练习</el-radio>
-        </el-form-item>
-      </el-col>
-    </el-row>
-    
-    <el-row :gutter="20">
-      <el-col :span="12">
         <el-form-item label="附属课程" prop="type">
           <el-select
             v-model="form.course_id"
@@ -98,7 +89,6 @@
       return {
         form: {
           title: '',
-          type: 'daily',
           started_at: '',
           ended_at: '',
           group_ids: [],

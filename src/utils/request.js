@@ -54,7 +54,7 @@ service.interceptors.response.use(
       return Promise.reject(error)
     }
     Notification({
-      title: '404 Not Found',
+      title: '错误',
       message: error.response.data.message,
       type: 'error',
       duration: 3000

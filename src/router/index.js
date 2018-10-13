@@ -56,8 +56,8 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: 'userIndex',
-        component: () => import('@/views/users/index'),
-        meta: { title: '用户管理', icon: 'form' }
+        component: () => import('@/views/adminUsers/index'),
+        meta: { title: '教师管理', icon: 'form' }
       }
     ]
   },

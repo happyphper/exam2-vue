@@ -14,7 +14,8 @@ export function login(username, password) {
 export function me() {
   return request({
     url: '/auth/me',
-    method: 'get'
+    method: 'get',
+    params: { include: 'roles' }
   })
 }
 

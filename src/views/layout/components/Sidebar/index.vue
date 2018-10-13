@@ -22,10 +22,19 @@ export default {
   components: { SidebarItem },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'roles'
     ]),
     routes() {
-      return this.$router.options.routes
+      let routes = Object.assign({}, this.$router.options.routes)
+      const isAdmin = this.roles.some(item => {
+        return item.name === 'admin' || item.name === 'superAdmin'
+      })
+      routes = Object.values(routes)
+      if (!isAdmin) {
+        routes.find(item => item.path === '/users').hidden = true
+      }
+      return routes
     },
     isCollapse() {
       return !this.sidebar.opened

@@ -48,6 +48,7 @@ const auth = {
           commit('SET_ID', response.id)
           commit('SET_NAME', response.name)
           commit('SET_AVATAR', response.avatar)
+          commit('SET_ROLES', response.roles.data)
           resolve(response)
         }).catch(error => {
           reject(error)

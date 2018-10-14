@@ -43,7 +43,7 @@
         </el-col>
         <el-col :span="4">
           <el-button icon="el-icon-search" @click="handleSearch" circle></el-button>
-          <el-button type="success" icon="el-icon-download" @click="exportExcel" circle></el-button>
+          <el-button type="success" icon="el-icon-download" @click="handleDownload" circle></el-button>
         </el-col>
       </el-row>
     </div>
@@ -81,7 +81,8 @@
           group_id: null,
           created_at: []
         },
-        currentRow: 0
+        currentRow: 0,
+        downloadLoading: false
       }
     },
     methods: {
@@ -116,7 +117,62 @@
       handleSearch() {
         this.fetchUserGrade()
       },
-      exportExcel() {},
+      handleDownload() {
+        const headers = this.formatHeaders(this.tableData)
+        const fields = this.formatFiedls(this.tableData)
+        const data = this.formatJson(fields, this.tableData)
+        this.$prompt('请输入文件名称', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /.*/,
+          inputErrorMessage: '只能是数值'
+        }).then(({ value }) => {
+          this.downloadLoading = true
+          import('@/vendor/ExportToExcel').then(excel => {
+            excel.export_json_to_excel({
+              header: headers,
+              data,
+              filename: value || '学员成绩数据',
+              autoWidth: true
+            })
+            this.downloadLoading = false
+          })
+        }).finally(() => {
+          this.downloadLoading = false
+        })
+      },
+      formatHeaders(data) {
+        const headers = ['姓名', '课程', '班级']
+        data.map(item => {
+          item.tests.forEach(test => {
+            headers.push(test.title)
+          })
+        })
+        headers.push('平均分')
+        return headers
+      },
+      formatFiedls(data) {
+        const fields = ['name', 'course', 'group']
+        data.map(item => {
+          item.tests.forEach(test => {
+            fields.push(test.id)
+          })
+        })
+        fields.push('average')
+        return fields
+      },
+      formatJson(fileds, data) {
+        return data.map(item => fileds.map(field => {
+          if (item[field]) {
+            return item[field]
+          }
+          const row = item.tests.find(test => test.id === field)
+          if (row && row.score) {
+            return row.score
+          }
+          return 0
+        }))
+      },
       handleCurrentRow(row) {
         this.currentRow = row
       }

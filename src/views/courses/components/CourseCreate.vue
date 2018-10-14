@@ -19,7 +19,7 @@
   import { storeCourse } from '@/api/courses'
   
   export default {
-    name: 'createCourse',
+    name: 'CourseCreate',
     created() {},
     data() {
       return {

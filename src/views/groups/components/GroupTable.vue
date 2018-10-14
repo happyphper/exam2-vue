@@ -86,17 +86,17 @@
 </template>
 
 <script>
-  import UserCreate from '@/views/users/create'
-  import UserTable from '@/views/users/table'
-  import GroupCreate from '@/views/groups/create'
-  import GroupEdit from '@/views/groups/edit'
-  import UploadExcel from '@/components/UploadExcel'
-  import GroupImport from '@/views/groups/import'
-  
   import { getGroups, deleteGroup } from '@/api/groups'
   
+  import UserCreate from '../../users/components/UserCreate'
+  import UserTable from '../../users/components/UserTable'
+  import GroupCreate from './GroupCreate'
+  import GroupEdit from './GroupEdit'
+  import UploadExcel from '@/components/UploadExcel'
+  import GroupImport from './UserImport'
+  
   export default {
-    name: 'groupTable',
+    name: 'GroupTable',
     components: {
       UserCreate,
       UserTable,

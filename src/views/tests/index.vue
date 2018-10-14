@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import TestTable from './table'
+  import TestTable from './components/TestTable'
   
   export default {
     name: 'tests',

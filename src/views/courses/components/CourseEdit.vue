@@ -19,7 +19,7 @@
   import { updateCourse } from '@/api/courses'
   
   export default {
-    name: 'courseEdit',
+    name: 'CourseEdit',
     created() {
       this.form.title = this.course.title
     },

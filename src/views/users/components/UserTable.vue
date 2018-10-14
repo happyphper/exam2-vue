@@ -8,12 +8,15 @@
               <el-option label="姓名" value="name"></el-option>
               <el-option label="手机" value="phone"></el-option>
               <el-option label="邮箱" value="email"></el-option>
+              <el-option label="学号" value="student_id"></el-option>
             </el-select>
             <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
           </el-input>
         </el-col>
-        <el-col :span="2">
-          <el-button type="success" icon="el-icon-plus" @click="showAdminUserCreateComponent" circle></el-button>
+        <el-col :span="6">
+          <el-input placeholder="请输入群组名称" v-model="groupsName" :disabled="disableGroupSearch">
+            <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+          </el-input>
         </el-col>
       </el-row>
     </div>
@@ -40,15 +43,22 @@
         label="手机">
       </el-table-column>
       <el-table-column
+        prop="student_id"
+        label="学号">
+      </el-table-column>
+      <el-table-column
         prop="created_at"
         label="注册时间"
         sortable="custom">
       </el-table-column>
+      <el-table-column
+        prop="group.name"
+        label="群组">
+      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-            <el-button @click="showAdminUserEditComponent(scope.row, scope.$index)" icon="el-icon-edit"
-                       size="small"></el-button>
+            <el-button @click="showUserEditComponent(scope.row, scope.$index)" icon="el-icon-edit" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
             <el-button @click="handleDelete(scope.row, scope.$index)" icon="el-icon-delete" size="small"></el-button>
@@ -68,31 +78,34 @@
       </el-pagination>
     </div>
     <!--UserCreate-->
-    <el-dialog title="提示" :visible.sync="adminUserCreateStatus" width="50%">
-      <AdminUserCreate @created="adminUserCreated" :key="Date.now()"></AdminUserCreate>
+    <el-dialog title="提示" :visible.sync="userCreateStatus" width="50%" append-to-body>
+      <UserCreate :group="userCreateBindGroup" @created="userCreated" :key="Date.now()"></UserCreate>
     </el-dialog>
     <!--UserEdit-->
-    <el-dialog title="提示" :visible.sync="adminUserEditStatus" width="50%">
-      <AdminUserEdit :adminUser="adminUserEditBindAdminUser" @updated="adminUserUpdated"
-                     :key="Date.now()"></AdminUserEdit>
+    <el-dialog title="提示" :visible.sync="userEditStatus" width="50%" append-to-body>
+      <UserEdit :user="userEditBindUser" @updated="userUpdated" :key="Date.now()"></UserEdit>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import { getAdminUsers, deleteAdminUser } from '@/api/adminUsers'
-  import AdminUserEdit from '@/views/adminUsers/edit'
-  import AdminUserCreate from '@/views/adminUsers/create'
+  import { getUsers, deleteUser } from '@/api/users'
+  import UserEdit from './UserEdit'
+  import UserCreate from './UserCreate'
   
   export default {
-    name: 'adminUsersTable',
+    name: 'UserTable',
     created() {
-      this.fetchAdminUsers()
+      if (this.group) {
+        this.disableGroupSearch = true
+      }
+      this.fetchUsers()
     },
     components: {
-      AdminUserCreate,
-      AdminUserEdit
+      UserCreate,
+      UserEdit
     },
+    props: ['group'],
     data() {
       return {
         tableData: [],
@@ -108,24 +121,29 @@
           value: null
         },
         include: null,
+        groupsName: null,
+        groupsId: null,
         loading: false,
-        adminUserCreateStatus: false,
-        adminUserCreateBindGroup: null,
-        adminUserEditStatus: false,
-        adminUserEditBindAdminUser: null,
-        adminUserEditIndex: null
+        userCreateStatus: false,
+        userCreateBindGroup: null,
+        userEditStatus: false,
+        userEditBindUser: null,
+        userEditIndex: null,
+        disableGroupSearch: false
       }
     },
     methods: {
-      fetchAdminUsers() {
+      fetchUsers() {
         const queryString = {}
         this.query.value && (queryString[this.query.label] = `%${this.query.value}%`)
+        this.groupsName && (queryString['groups:name'] = `%${this.groupsName}%`)
+        this.group && (queryString['group:id'] = this.group.id)
         queryString.include = this.include
         queryString.sort = `${this.sort.prop},${this.order}`
         queryString.page = this.currentPage
         queryString.per_page = this.perPage
         this.loading = true
-        getAdminUsers(queryString).then(response => {
+        getUsers(queryString).then(response => {
           this.tableData = response.data
           this.currentPage = response.meta.pagination.current_page
           this.perPage = response.meta.pagination.per_page
@@ -135,47 +153,48 @@
         })
       },
       handleSearch() {
-        this.fetchAdminUsers()
+        this.fetchUsers()
       },
       handleSizeChange(pageNumber) {
         this.perPage = pageNumber
-        this.fetchAdminUsers()
+        this.fetchUsers()
       },
       handleCurrentChange(currentPage) {
         this.currentPage = currentPage
-        this.fetchAdminUsers()
+        this.fetchUsers()
       },
       handleSortChange({ column, prop, order }) {
         this.sort = { prop, order }
-        this.fetchAdminUsers()
+        this.fetchUsers()
       },
-      handleDelete(adminUser, index) {
-        this.$confirm(`此操作将永久删除 ${adminUser.name} 用户, 是否继续?`, '提示', {
+      handleDelete(user, index) {
+        this.$confirm(`此操作将永久删除 ${user.name} 用户, 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          return deleteAdminUser(adminUser.id)
+          return deleteUser(user.id)
         }).then(() => {
           this.$message.success('删除成功')
+          this.group && this.group.users_count--
           this.tableData.splice(index, 1)
         })
       },
-      showAdminUserCreateComponent() {
-        this.adminUserCreateStatus = true
+      showUserCreateComponent() {
+        this.userCreateStatus = true
       },
-      adminUserCreated(adminUser) {
-        this.adminUserCreateStatus = false
-        this.tableData.push(adminUser)
+      userCreated(user) {
+        this.userCreateStatus = false
+        this.tableData.push(user)
       },
-      showAdminUserEditComponent(adminUser, index) {
-        this.adminUserEditBindAdminUser = adminUser
-        this.adminUserEditIndex = index
-        this.adminUserEditStatus = true
+      showUserEditComponent(user, index) {
+        this.userEditBindUser = user
+        this.userEditIndex = index
+        this.userEditStatus = true
       },
-      adminUserUpdated(newAdminUser) {
-        this.tableData.splice(this.adminUserEditIndex, 1, newAdminUser)
-        this.adminUserEditStatus = false
+      userUpdated(newUser) {
+        this.tableData.splice(this.userEditIndex, 1, newUser)
+        this.userEditStatus = false
       }
     }
   }

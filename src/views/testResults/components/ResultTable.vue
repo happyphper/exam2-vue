@@ -92,10 +92,10 @@
 <script>
   import { getTestResults } from '@/api/testResults'
   
-  import UserGradeCurve from './components/UserGradeCurve'
+  import UserGradeCurve from './UserGradeCurve'
   
   export default {
-    name: 'testResultTable',
+    name: 'ResultTable',
     components: {
       UserGradeCurve
     },

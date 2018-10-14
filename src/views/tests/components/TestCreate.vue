@@ -7,7 +7,7 @@
         </el-form-item>
       </el-col>
     </el-row>
-  
+    
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="附属课程" prop="type">
@@ -53,7 +53,7 @@
         </el-form-item>
       </el-col>
     </el-row>
-    
+
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="开始时间" prop="started_at">
@@ -61,7 +61,7 @@
         </el-form-item>
       </el-col>
     </el-row>
-    
+
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="结束时间" prop="ended_at">
@@ -69,41 +69,30 @@
         </el-form-item>
       </el-col>
     </el-row>
-    
+
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即更新</el-button>
+      <el-button type="primary" @click="onSubmit">立即创建</el-button>
       <el-button @click="resetForm('form')">重置表单</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
-  import { updateTest } from '@/api/tests'
-  import { getGroups } from '@/api/groups'
+  import { storeTest } from '@/api/tests'
   import { getCourses } from '@/api/courses'
+  import { getGroups } from '@/api/groups'
   
   export default {
-    name: 'testEdit',
-    created() {
-      this.form.title = this.test.title
-      this.form.type = this.test.type
-      this.form.started_at = this.test.started_at
-      this.form.ended_at = this.test.ended_at
-      this.groupSelectList = this.test.groups.data
-      this.test.groups.data.forEach(item => this.form.group_ids.push(item.id))
-  
-      this.courseSelectList.push(this.test.course)
-      this.form.course_id = this.test.course.id
-    },
-    props: ['test', 'course'],
+    name: 'TestCreate',
+    created() {},
     data() {
       return {
         form: {
           title: '',
           started_at: '',
           ended_at: '',
-          course_id: null,
-          group_ids: []
+          group_ids: [],
+          course_id: null
         },
         loading: false,
         groupSelectListLoading: false,
@@ -131,8 +120,8 @@
       },
       onSubmit() {
         this.loading = true
-        updateTest(this.test.id, this.form).then(response => {
-          this.$emit('updated', response)
+        storeTest(this.form).then(response => {
+          this.$emit('created', response)
         }).finally(() => {
           this.loading = false
         })

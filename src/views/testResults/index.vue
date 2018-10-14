@@ -22,7 +22,7 @@
   import GradeDistribution from './components/GradeDistribution'
   import ErrorQuestion from './components/ErrorQuestion'
   
-  import TestResultTable from './table'
+  import TestResultTable from './components/ResultTable'
   
   export default {
     name: 'testResults',

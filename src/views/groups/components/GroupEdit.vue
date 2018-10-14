@@ -3,28 +3,12 @@
     <el-form ref="form" :model="form" label-width="80px" v-loading="loading">
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="姓名" prop="name">
+          <el-form-item label="班级名称" prop="name">
             <el-input v-model="form.name"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-    
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="form.email"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="手机" prop="phone">
-            <el-input v-model="form.phone"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    
+      
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即更新</el-button>
         <el-button @click="resetForm('form')">重置表单</el-button>
@@ -34,23 +18,18 @@
 </template>
 
 <script>
-  import { updateAdminUser } from '@/api/adminUsers'
+  import { updateGroup } from '@/api/groups'
   
   export default {
-    name: 'adminUserEdit',
+    name: 'GroupEdit',
+    props: ['group'],
     created() {
-      this.form.name = this.adminUser.name
-      this.form.email = this.adminUser.email
-      this.form.phone = this.adminUser.phone
+      this.form.name = this.group.name
     },
-    props: ['adminUser'],
     data() {
       return {
         form: {
-          name: null,
-          email: null,
-          student_id: null,
-          phone: null
+          name: ''
         },
         loading: false
       }
@@ -58,7 +37,7 @@
     methods: {
       onSubmit() {
         this.loading = true
-        updateAdminUser(this.adminUser.id, this.form).then(response => {
+        updateGroup(this.group.id, this.form).then(response => {
           this.$message.success('更新成功')
           this.$emit('updated', response)
           this.resetForm('form')
@@ -74,11 +53,5 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .block {
-    width: 100%;
-    text-align: center;
-  }
-  .search-bar {
-    padding: 10px 0 10px 0;
-  }
+
 </style>

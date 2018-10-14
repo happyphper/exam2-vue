@@ -88,14 +88,14 @@
 
 <script>
   import UploadExcel from '@/components/UploadExcel'
-  import CourseImport from '@/views/courses/import'
+  import CourseImport from '../../courses/components/QuestionImport'
   import { getCourses, deleteCourse } from '@/api/courses'
-  import QuestionCreate from '@/views/questions/components/QuestionCreate'
-  import CourseCreate from './create'
-  import CourseEdit from './edit'
+  import QuestionCreate from '../../questions/components/QuestionCreate'
+  import CourseCreate from './CourseCreate'
+  import CourseEdit from './CourseEdit'
   
   export default {
-    name: 'courseTable',
+    name: 'CourseTable',
     components: {
       CourseCreate,
       CourseEdit,

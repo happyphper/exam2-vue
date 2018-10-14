@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import GroupTable from '@/views/groups/table'
+  import GroupTable from './components/GroupTable'
 
   export default {
     name: 'groups',

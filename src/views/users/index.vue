@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import UserTable from '@/views/users/table'
+  import UserTable from './components/UserTable'
   
   export default {
     name: 'users',

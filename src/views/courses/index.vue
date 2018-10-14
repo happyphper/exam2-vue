@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import CourseTable from './table'
+  import CourseTable from './components/CourseTable'
   
   export default {
     name: 'courses',

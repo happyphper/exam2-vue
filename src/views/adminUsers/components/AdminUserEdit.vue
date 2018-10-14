@@ -19,22 +19,6 @@
     
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="班级" prop="group_id">
-            <el-tag :key="user.group.id" style="margin-right: 0.5rem;">{{ user.group.name }}</el-tag>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="学号" prop="student_id">
-            <el-input v-model="form.student_id"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      
-      <el-row :gutter="20">
-        <el-col :span="12">
           <el-form-item label="手机" prop="phone">
             <el-input v-model="form.phone"></el-input>
           </el-form-item>
@@ -50,17 +34,16 @@
 </template>
 
 <script>
-  import { updateUser } from '@/api/users'
+  import { updateAdminUser } from '@/api/adminUsers'
   
   export default {
-    name: 'userEdit',
+    name: 'AdminUserEdit',
     created() {
-      this.form.name = this.user.name
-      this.form.email = this.user.email
-      this.form.student_id = this.user.student_id
-      this.form.phone = this.user.phone
+      this.form.name = this.adminUser.name
+      this.form.email = this.adminUser.email
+      this.form.phone = this.adminUser.phone
     },
-    props: ['user'],
+    props: ['adminUser'],
     data() {
       return {
         form: {
@@ -75,7 +58,7 @@
     methods: {
       onSubmit() {
         this.loading = true
-        updateUser(this.user.id, this.form).then(response => {
+        updateAdminUser(this.adminUser.id, this.form).then(response => {
           this.$message.success('更新成功')
           this.$emit('updated', response)
           this.resetForm('form')

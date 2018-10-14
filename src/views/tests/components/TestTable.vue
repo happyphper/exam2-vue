@@ -91,12 +91,12 @@
 <script>
   import { getTests, deleteTest } from '@/api/tests'
   
-  import TestCreate from './create'
-  import TestEdit from './edit'
-  import Paper from '@/views/tests/paper'
+  import TestCreate from './TestCreate'
+  import TestEdit from './TestEdit'
+  import Paper from '../paper'
   
   export default {
-    name: 'testTable',
+    name: 'TestTable',
     components: {
       Paper,
       TestCreate,

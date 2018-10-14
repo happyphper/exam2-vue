@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import AdminUserTable from '@/views/adminUsers/table'
+  import AdminUserTable from './components/AdminUserTable'
   
   export default {
     name: 'adminUsers',

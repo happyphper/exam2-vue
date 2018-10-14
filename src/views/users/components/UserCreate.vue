@@ -53,7 +53,7 @@
   import { storeUser } from '@/api/users'
   
   export default {
-    name: 'userCreate',
+    name: 'UserCreate',
     created() {
       this.form.group_id = this.group.id
     },

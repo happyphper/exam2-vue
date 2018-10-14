@@ -24,7 +24,7 @@
   import { bulk } from '@/api/users'
   
   export default {
-    name: 'import',
+    name: 'UserImport',
     props: ['group', 'headers', 'data'],
     created() {
     },

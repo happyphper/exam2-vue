@@ -24,7 +24,7 @@
   import { bulk } from '@/api/questions'
   
   export default {
-    name: 'import',
+    name: 'QuestionImport',
     props: ['course', 'headers', 'data'],
     created() {
     },

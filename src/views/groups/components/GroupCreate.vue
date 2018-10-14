@@ -8,9 +8,9 @@
           </el-form-item>
         </el-col>
       </el-row>
-      
+    
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即更新</el-button>
+        <el-button type="primary" @click="onSubmit">立即创建</el-button>
         <el-button @click="resetForm('form')">重置表单</el-button>
       </el-form-item>
     </el-form>
@@ -18,14 +18,10 @@
 </template>
 
 <script>
-  import { updateGroup } from '@/api/groups'
+  import { storeGroup } from '@/api/groups'
   
   export default {
-    name: 'groups',
-    props: ['group'],
-    created() {
-      this.form.name = this.group.name
-    },
+    name: 'GroupCreate',
     data() {
       return {
         form: {
@@ -37,9 +33,9 @@
     methods: {
       onSubmit() {
         this.loading = true
-        updateGroup(this.group.id, this.form).then(response => {
-          this.$message.success('更新成功')
-          this.$emit('updated', response)
+        storeGroup(this.form).then(response => {
+          this.$message.success('创建成功')
+          this.$emit('created', response)
           this.resetForm('form')
         }).finally(() => {
           this.loading = false

@@ -13,9 +13,9 @@
         <template slot-scope="props">
           <el-row v-for="option in props.row.options" :key="option.id">
             <el-col :span="24">
-              <el-form label-position="left" inline class="demo-table-expand">
+              <el-form label-position="left" inline>
                 <el-form-item :label="`选项 ${option.id}`">
-                  <span>{{ option.title }}</span>
+                  <span>{{ option.content }}121312</span>
                 </el-form-item>
               </el-form>
             </el-col>

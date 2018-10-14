@@ -149,6 +149,20 @@ export const constantRouterMap = [
     ]
   },
 
+  {
+    path: '/statistics',
+    component: Layout,
+    hidden: false,
+    children: [
+      {
+        path: 'index',
+        name: 'statisticsIndex',
+        component: () => import('@/views/statistics/index'),
+        meta: { title: '成绩导出', icon: 'form' }
+      }
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 

@@ -31,3 +31,11 @@ export function getUserGradeCurve(userId) {
     }
   })
 }
+
+export function getUserGradeData(params) {
+  return request({
+    url: '/stat/user-grade-data',
+    method: 'get',
+    params
+  })
+}

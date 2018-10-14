@@ -30,3 +30,14 @@ export function deleteUser(userId) {
     method: 'delete'
   })
 }
+
+export function bulk(groupId, data) {
+  return request({
+    url: `/bulk-import-users`,
+    method: 'post',
+    data: {
+      group_id: groupId,
+      users: data
+    }
+  })
+}

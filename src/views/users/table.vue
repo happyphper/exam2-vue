@@ -51,13 +51,9 @@
         label="注册时间"
         sortable="custom">
       </el-table-column>
-      <el-table-column label="群组">
-        <template slot-scope="scope">
-          <el-tag :key="group.id" v-for="(group, index) in scope.row.groups.data" closable :disable-transitions="false" @close="handleDeleteUserGroup(scope.row, group, index)">
-            {{group.name}}
-          </el-tag>
-          <el-button size="small" icon="el-icon-plus" @click="showUserGroupCreateComponent(scope.row)"></el-button>
-        </template>
+      <el-table-column
+        prop="group.name"
+        label="群组">
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -82,27 +78,20 @@
       </el-pagination>
     </div>
     <!--UserCreate-->
-    <el-dialog title="提示" :visible.sync="userCreateStatus" width="50%">
+    <el-dialog title="提示" :visible.sync="userCreateStatus" width="50%" append-to-body>
       <UserCreate :group="userCreateBindGroup" @created="userCreated" :key="Date.now()"></UserCreate>
     </el-dialog>
     <!--UserEdit-->
-    <el-dialog title="提示" :visible.sync="userEditStatus" width="50%">
+    <el-dialog title="提示" :visible.sync="userEditStatus" width="50%" append-to-body>
       <UserEdit :user="userEditBindUser" @updated="userUpdated" :key="Date.now()"></UserEdit>
     </el-dialog>
-    <!--UserGroupCreate-->
-    <el-dialog title="提示" :visible.sync="userGroupCreateStatus" width="50%">
-      <UserGroupCreate :user="userGroupCreateBindUser" @created="userGroupCreated" :key="Date.now()"></UserGroupCreate>
-    </el-dialog>
-    
   </div>
 </template>
 
 <script>
   import { getUsers, deleteUser } from '@/api/users'
-  import { deleteUserGroup } from '@/api/userGroups'
   import UserEdit from '@/views/users/edit'
   import UserCreate from '@/views/users/create'
-  import UserGroupCreate from '@/views/userGroups/create'
   
   export default {
     name: 'usersTable',
@@ -114,8 +103,7 @@
     },
     components: {
       UserCreate,
-      UserEdit,
-      UserGroupCreate
+      UserEdit
     },
     props: ['group'],
     data() {
@@ -141,9 +129,7 @@
         userEditStatus: false,
         userEditBindUser: null,
         userEditIndex: null,
-        disableGroupSearch: false,
-        userGroupCreateBindUser: null,
-        userGroupCreateStatus: false
+        disableGroupSearch: false
       }
     },
     methods: {
@@ -151,7 +137,7 @@
         const queryString = {}
         this.query.value && (queryString[this.query.label] = `%${this.query.value}%`)
         this.groupsName && (queryString['groups:name'] = `%${this.groupsName}%`)
-        this.group && (queryString['groups:id'] = this.group.id)
+        this.group && (queryString['group:id'] = this.group.id)
         queryString.include = this.include
         queryString.sort = `${this.sort.prop},${this.order}`
         queryString.page = this.currentPage
@@ -209,29 +195,6 @@
       userUpdated(newUser) {
         this.tableData.splice(this.userEditIndex, 1, newUser)
         this.userEditStatus = false
-      },
-      handleDeleteUserGroup(row, group, index) {
-        this.$confirm(`此操作将用户 ${row.name} 移除与 ${group.name} 群组的附属关系, 是否继续?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          return deleteUserGroup(row.id, group.id)
-        }).then(() => {
-          this.$message.success('删除成功')
-          if (this.group && group.id === this.group.id) {
-            this.group && this.group.users_count--
-          }
-          row.groups.data.splice(index, 1)
-        })
-      },
-      showUserGroupCreateComponent(user) {
-        this.userGroupCreateBindUser = user
-        this.userGroupCreateStatus = true
-      },
-      userGroupCreated(group) {
-        this.userGroupCreateStatus = false
-        this.userGroupCreateBindUser.groups.data.push(group)
       }
     }
   }

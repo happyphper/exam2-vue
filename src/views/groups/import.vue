@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import { bulk } from '@/api/userGroups'
+  import { bulk } from '@/api/users'
   
   export default {
     name: 'import',

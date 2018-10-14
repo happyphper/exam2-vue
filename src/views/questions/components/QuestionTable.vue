@@ -57,23 +57,20 @@
         label="解析">
       </el-table-column>
       <el-table-column
+        sortable="custom"
+        prop="accuracy"
         label="正确率">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark"
-                      :content="`${scope.row.right_count}/${scope.row.right_count + scope.row.wrong_count}`"
+                      :content="`${scope.row.right_count}/${scope.row.answered_count}`"
                       placement="right">
-            <el-tag>{{ (scope.row.right_count + scope.row.wrong_count) !== 0 ? (scope.row.right_count/(scope.row.right_count + scope.row.wrong_count)).toFixed(2) * 100 : 0 }}</el-tag>
+            <el-button type="primary" size="mini">{{ scope.row.accuracy }}%</el-button>
           </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column
         prop="created_at"
-        label="创建时间"
-        sortable="custom">
-      </el-table-column>
-      <el-table-column
-        prop="created_at"
-        label="创建时间"
+        label="创建"
         sortable="custom">
       </el-table-column>
       <el-table-column
@@ -151,7 +148,11 @@
         loading: false,
         questionCreateStatus: false,
         questionEditStatus: false,
-        questionEditBindQuestion: null
+        questionEditBindQuestion: null,
+        defaultSortFields: {
+          descending: 'desc',
+          ascending: 'asc'
+        }
       }
     },
     methods: {
@@ -176,12 +177,15 @@
       },
       handleSizeChange(pageNumber) {
         this.perPage = pageNumber
+        this.fetchQuestions()
       },
       handleCurrentChange(currentPage) {
         this.currentPage = currentPage
+        this.fetchQuestions()
       },
       handleSortChange({ column, prop, order }) {
-        this.sort = { prop, order }
+        this.sort = { prop, order: this.defaultSortFields[order] }
+        this.fetchQuestions()
       },
       handleSearch() {
         this.fetchQuestions()

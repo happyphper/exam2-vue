@@ -126,6 +126,7 @@
     name: 'QuestionTable',
     components: { QuestionCreate, QuestionEdit },
     created() {
+      this.$route.query.courseTitle && (this.query.courseTitle = this.$route.query.courseTitle)
       this.fetchQuestions()
     },
     props: ['testId'],

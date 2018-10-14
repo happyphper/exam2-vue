@@ -22,7 +22,13 @@
         prop="title">
       </el-table-column>
       <el-table-column
-        label="题目个数"
+        width="60"
+        label="题目"
+        prop="questions_count">
+      </el-table-column>
+      <el-table-column
+        width="60"
+        label="考试"
         prop="questions_count">
       </el-table-column>
       <el-table-column
@@ -35,7 +41,7 @@
             <el-button @click="showQuestionCreateComponent(scope.row)" icon="el-icon-plus"
                        size="small"></el-button>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="导入" placement="top">
+          <el-tooltip class="item" effect="dark" content="导入题目" placement="top">
             <el-button @click="showUploadExcelComponent(scope.row)" icon="el-icon-upload" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
@@ -44,6 +50,20 @@
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
             <el-button @click="handleDelete(scope.row, scope.$index)" icon="el-icon-delete" size="small"></el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="查看附属题目" placement="top">
+            <router-link :to="{ name: 'questionIndex', query: { courseTitle: scope.row.title }}">
+              <el-button size="small">
+                <svg-icon icon-class="question" />
+              </el-button>
+            </router-link>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="查看附属考试" placement="top">
+            <router-link :to="{ name: 'testIndex', query: { courseTitle: scope.row.title }}">
+              <el-button size="small">
+                <svg-icon icon-class="test" />
+              </el-button>
+            </router-link>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -120,7 +140,7 @@
           label: 'title',
           value: null
         },
-        include: null,
+        include: 'user',
         loading: false,
         courseCreateStatus: false,
         courseEditStatus: false,

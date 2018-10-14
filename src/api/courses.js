@@ -8,22 +8,24 @@ export function getCourses(params) {
   })
 }
 
-export function storeCourse(data) {
+export function storeCourse(data, params = { include: 'user' }) {
   if (data.parent_id === 0) {
     delete data.parent_id
   }
   return request({
     url: `/courses`,
     method: 'post',
-    data
+    data,
+    params
   })
 }
 
-export function updateCourse(courseId, data) {
+export function updateCourse(courseId, data, params = { include: 'user' }) {
   return request({
     url: `/courses/${courseId}`,
     method: 'put',
-    data
+    data,
+    params
   })
 }
 

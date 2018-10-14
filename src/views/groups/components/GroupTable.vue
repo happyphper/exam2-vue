@@ -2,15 +2,11 @@
   <div>
     <div class="search-bar">
       <el-row :gutter="20">
-        <el-col :span="6">
-          <el-input placeholder="请输入内容" v-model="query.value" class="input-with-select">
-            <el-select v-model="query.label" slot="prepend" placeholder="请选择" style="width: 80px">
-              <el-option label="名称" value="name"></el-option>
-            </el-select>
-            <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
-          </el-input>
+        <el-col :span="4">
+          <el-input placeholder="请输入班级关键字" v-model="query.name"></el-input>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="4" :offset="2">
+          <el-button icon="el-icon-search" circle @click="handleSearch"></el-button>
           <el-button type="success" icon="el-icon-plus" @click="showGroupCreateComponent" circle></el-button>
         </el-col>
       </el-row>
@@ -42,6 +38,13 @@
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="添加" placement="top">
             <el-button @click="showUserCreateComponent(scope.row)" icon="el-icon-plus" size="small"></el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="查看附属考试" placement="top">
+            <router-link :to="{ name: 'testIndex', query: { groupName: scope.row.name }}">
+              <el-button size="small">
+                <svg-icon icon-class="test" />
+              </el-button>
+            </router-link>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -119,8 +122,7 @@
           order: 'desc'
         },
         query: {
-          label: 'name',
-          value: null
+          name: ''
         },
         loading: false,
         userCreateStatus: false,
@@ -143,7 +145,7 @@
     methods: {
       fetchGroups() {
         const queryString = {}
-        this.query.value && (queryString[this.query.label] = `%${this.query.value}%`)
+        this.query.name && (queryString['name'] = `%${this.query.name}%`)
         queryString.sort = `${this.sort.prop},${this.order}`
         queryString.page = this.currentPage
         queryString.per_page = this.perPage

@@ -2,17 +2,17 @@
   <div>
     <div class="search-bar">
       <el-row :gutter="20">
-        <el-col :span="6">
-          <el-input placeholder="请输入内容" v-model="query.value" class="input-with-select">
-            <el-select v-model="query.label" slot="prepend" placeholder="请选择" style="width: 120px">
-              <el-option label="考试名称" value="title"></el-option>
-              <el-option label="班级名称" value="groups:name"></el-option>
-              <el-option label="课程名称" value="course:title"></el-option>
-            </el-select>
-            <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
-          </el-input>
+        <el-col :span="4">
+          <el-input placeholder="请输入考试关键字" v-model="query.title"></el-input>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="4">
+          <el-input placeholder="请输入课程关键字" v-model="query.courseTitle"></el-input>
+        </el-col>
+        <el-col :span="4">
+          <el-input placeholder="请输入班级关键字" v-model="query.groupName"></el-input>
+        </el-col>
+        <el-col :span="4" :offset="2">
+          <el-button icon="el-icon-search" circle @click="handleSearch"></el-button>
           <el-button  type="success" icon="el-icon-plus"  @click="showTestCreateComponent" circle></el-button>
         </el-col>
       </el-row>
@@ -103,6 +103,8 @@
       TestEdit
     },
     created() {
+      this.$route.query.courseTitle && (this.query.courseTitle = this.$route.query.courseTitle)
+      this.$route.query.groupName && (this.query.groupName = this.$route.query.groupName)
       this.fetchTests()
     },
     data() {
@@ -116,8 +118,9 @@
           order: 'desc'
         },
         query: {
-          label: 'title',
-          value: null
+          title: null,
+          courseTitle: null,
+          groupName: null
         },
         include: 'groups,course',
         loading: false,
@@ -130,7 +133,9 @@
     methods: {
       fetchTests() {
         const queryString = {}
-        this.query.value && (queryString[this.query.label] = `%${this.query.value}%`)
+        this.query.title && (queryString['title'] = `%${this.query.title}%`)
+        this.query.courseTitle && (queryString['course:title'] = `%${this.query.courseTitle}%`)
+        this.query.groupName && (queryString['groups:name'] = `%${this.query.groupName}%`)
         queryString.include = this.include
         queryString.sort = `${this.sort.prop},${this.sort.order}`
         queryString.page = this.currentPage

@@ -29,7 +29,7 @@
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item :label="`选项 ${option.id}`">
                   <span v-if="option.type === 'text'">{{ option.content }}</span>
-                  <img :src="option.content" width="100" v-else />
+                  <img :src="option.content" width="100" v-else/>
                 </el-form-item>
               </el-form>
             </el-col>
@@ -57,12 +57,14 @@
         label="解析">
       </el-table-column>
       <el-table-column
-        prop="wrong_count"
-        label="错误次数">
-      </el-table-column>
-      <el-table-column
-        prop="right_count"
-        label="正确次数">
+        label="正确率">
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark"
+                      :content="`${scope.row.right_count}/${scope.row.right_count + scope.row.wrong_count}`"
+                      placement="right">
+            <el-tag>{{ (scope.row.right_count + scope.row.wrong_count) !== 0 ? (scope.row.right_count/(scope.row.right_count + scope.row.wrong_count)).toFixed(2) * 100 : 0 }}</el-tag>
+          </el-tooltip>
+        </template>
       </el-table-column>
       <el-table-column
         prop="created_at"
@@ -118,17 +120,14 @@
 </template>
 
 <script>
-  import QuestionCreate from '@/views/questions/create'
-  import QuestionEdit from '@/views/questions/edit'
+  import QuestionCreate from './QuestionCreate'
+  import QuestionEdit from './QuestionEdit'
   import { getQuestions, deleteQuestion } from '@/api/questions'
   import { storeTestQuestion } from '@/api/testQuestions'
   
   export default {
-    name: 'questionTable',
-    components: {
-      QuestionCreate,
-      QuestionEdit
-    },
+    name: 'QuestionTable',
+    components: { QuestionCreate, QuestionEdit },
     created() {
       this.fetchQuestions()
     },
@@ -191,7 +190,6 @@
         this.questionCreateStatus = true
       },
       questionCreated(question) {
-        console.log('here')
         this.questionCreateStatus = false
         this.tableData.push(question)
       },

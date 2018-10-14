@@ -85,7 +85,7 @@
   import { getCourses } from '@/api/courses'
   
   export default {
-    name: 'questionText',
+    name: 'QuestionText',
     created() {
       if (this.course) {
         this.courseSelectList.push(this.course)

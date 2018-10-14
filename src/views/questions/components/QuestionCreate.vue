@@ -12,15 +12,12 @@
 </template>
 
 <script>
-  import TextQuestion from './text'
-  import ImageQuestion from './image'
+  import TextQuestion from './QuestionText'
+  import ImageQuestion from './QuestionImage'
   
   export default {
-    name: 'questionCreate',
-    components: {
-      TextQuestion,
-      ImageQuestion
-    },
+    name: 'QuestionCreate',
+    components: { TextQuestion, ImageQuestion },
     props: ['course'],
     data() {
       return {

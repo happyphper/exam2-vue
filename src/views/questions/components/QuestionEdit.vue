@@ -85,7 +85,7 @@
   import { getCourses } from '@/api/courses'
   
   export default {
-    name: 'questionEdit',
+    name: 'QuestionEdit',
     created() {
       this.courseSelectList.push(this.question.course)
       this.form.title = this.question.title

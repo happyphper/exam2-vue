@@ -52,7 +52,7 @@
 <script>
   import { getTestQuestions, deleteTestQuestion } from '@/api/testQuestions'
   
-  import QuestionTable from '@/views/questions/table'
+  import QuestionTable from '@/views/questions/components/QuestionTable'
   
   export default {
     name: 'paper',

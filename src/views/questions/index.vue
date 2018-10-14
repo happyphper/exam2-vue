@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import QuestionTable from '@/views/questions/table'
+  import QuestionTable from '@/views/questions/components/QuestionTable'
   
   export default {
     name: 'questions',

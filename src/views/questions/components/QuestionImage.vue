@@ -100,7 +100,7 @@
   import { getToken, deleteImage } from '@/api/cloudStorage'
   
   export default {
-    name: 'questionImage',
+    name: 'QuestionImage',
     created() {
       if (this.course) {
         this.courseSelectList.push(this.course)

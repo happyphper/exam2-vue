@@ -90,7 +90,7 @@
   import UploadExcel from '@/components/UploadExcel'
   import CourseImport from '@/views/courses/import'
   import { getCourses, deleteCourse } from '@/api/courses'
-  import QuestionCreate from '@/views/questions/create'
+  import QuestionCreate from '@/views/questions/components/QuestionCreate'
   import CourseCreate from './create'
   import CourseEdit from './edit'
   

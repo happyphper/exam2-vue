@@ -32,3 +32,11 @@ export function deleteTest(testId) {
     method: 'delete'
   })
 }
+
+export function endTest(testId, data) {
+  return request({
+    url: `/tests/${testId}/end`,
+    method: 'patch',
+    data
+  })
+}

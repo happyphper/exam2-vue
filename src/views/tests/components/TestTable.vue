@@ -44,6 +44,14 @@
         sortable="custom">
       </el-table-column>
       <el-table-column
+        width="100"
+        prop="status_translate"
+        label="状态">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="showTestEndComponent(scope.row)">{{ scope.row.status_translate }}</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="考题">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="考题" placement="top">
@@ -85,6 +93,10 @@
     <el-dialog title="提示" :visible.sync="testEditStatus" width="50%">
       <TestEdit :test="testEditBindTest" @updated="testUpdated" :key="Date.now()"></TestEdit>
     </el-dialog>
+    <!--EditModal-->
+    <el-dialog title="提示" :visible.sync="testEndBindStatus" width="50%">
+      <TestEnd :test="testEndBindTest" @ended="testEnded" :key="Date.now()"></TestEnd>
+    </el-dialog>
   </div>
 </template>
 
@@ -93,6 +105,7 @@
   
   import TestCreate from './TestCreate'
   import TestEdit from './TestEdit'
+  import TestEnd from './TestEnd'
   import Paper from '../paper'
   
   export default {
@@ -100,7 +113,8 @@
     components: {
       Paper,
       TestCreate,
-      TestEdit
+      TestEdit,
+      TestEnd
     },
     created() {
       this.$route.query.courseTitle && (this.query.courseTitle = this.$route.query.courseTitle)
@@ -127,7 +141,9 @@
         testCreateStatus: false,
         testEditStatus: false,
         testEditBindTest: null,
-        testEditIndex: 0
+        testEditIndex: 0,
+        testEndBindStatus: false,
+        testEndBindTest: null
       }
     },
     methods: {
@@ -189,6 +205,17 @@
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
         })
+      },
+      showTestEndComponent(test) {
+        if (test.status === 'end') {
+          return false
+        }
+        this.testEndBindTest = test
+        this.testEndBindStatus = true
+      },
+      testEnded() {
+        this.testEndBindStatus = false
+        this.$notify.success({ title: '成功', message: '班级结考成功，未答题学员将无法参加考试' })
       }
     }
   }

@@ -15,7 +15,7 @@
             <el-col :span="24">
               <el-form label-position="left" inline>
                 <el-form-item :label="`选项 ${option.id}`">
-                  <span>{{ option.content }}121312</span>
+                  <span>{{ option.content }}</span>
                 </el-form-item>
               </el-form>
             </el-col>

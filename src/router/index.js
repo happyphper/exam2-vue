@@ -123,14 +123,14 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/share-questions',
+    path: '/share-users',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'shareQuestionIndex',
-        component: () => import('@/views/shareQuestions/index'),
-        meta: { title: '共享题库', icon: 'form' }
+        name: 'shareUserIndex',
+        component: () => import('@/views/shareUsers/index'),
+        meta: { title: '共享管理', icon: 'form' }
       }
     ]
   },

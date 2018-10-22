@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
-    <ShareQuestionTable></ShareQuestionTable>
+    <ShareUserTable></ShareUserTable>
   </div>
 </template>
 
 <script>
-  import ShareQuestionTable from '@/views/shareQuestions/table'
+  import ShareUserTable from '@/views/shareUsers/table'
   
   export default {
-    name: 'users',
+    name: 'shareUsers',
     components: {
-      ShareQuestionTable
+      ShareUserTable
     }
   }
 </script>

@@ -28,12 +28,12 @@
 </template>
 
 <script>
-  import { getShareQuestions, storeShareQuestion, deleteShareQuestion } from '@/api/shareQuestions'
+  import { getShareUsers, storeShareUser, deleteShareUser } from '@/api/shareUsers'
   
   export default {
-    name: 'shareQuestionsTable',
+    name: 'shareUsersTable',
     created() {
-      this.fetchShareQuestions()
+      this.fetchShareUsers()
     },
     props: ['group'],
     data() {
@@ -47,11 +47,11 @@
       }
     },
     methods: {
-      fetchShareQuestions() {
+      fetchShareUsers() {
         const queryString = {}
         queryString.include = this.include
         this.loading = true
-        getShareQuestions(queryString).then(response => {
+        getShareUsers(queryString).then(response => {
           this.tableData = response.data
         }).finally(() => {
           this.loading = false
@@ -64,7 +64,7 @@
           inputPattern: /1[3-9]\d{9}/,
           inputErrorMessage: '手机格式不正确'
         }).then(({ value }) => {
-          return storeShareQuestion(value)
+          return storeShareUser(value)
         }).then(response => {
           this.tableData.push(response)
           this.$message.success('添加成功')
@@ -76,7 +76,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          return deleteShareQuestion(row.share_user.id)
+          return deleteShareUser(row.share_user.id)
         }).then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)

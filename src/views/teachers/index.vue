@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
-    <AdminUserTable></AdminUserTable>
+    <TeacherTable></TeacherTable>
   </div>
 </template>
 
 <script>
-  import AdminUserTable from './components/AdminUserTable'
+  import TeacherTable from './components/TeacherTable'
   
   export default {
-    name: 'adminUsers',
+    name: 'teachers',
     components: {
-      AdminUserTable
+      TeacherTable
     }
   }
 </script>

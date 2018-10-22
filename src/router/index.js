@@ -51,13 +51,13 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/users',
+    path: '/teachers',
     component: Layout,
     children: [
       {
         path: 'index',
         name: 'userIndex',
-        component: () => import('@/views/adminUsers/index'),
+        component: () => import('@/views/teachers/index'),
         meta: { title: '教师管理', icon: 'form' }
       }
     ]

@@ -13,7 +13,7 @@
           </el-input>
         </el-col>
         <el-col :span="2">
-          <el-button type="success" icon="el-icon-plus" @click="showAdminUserCreateComponent" circle></el-button>
+          <el-button type="success" icon="el-icon-plus" @click="showTeacherCreateComponent" circle></el-button>
         </el-col>
       </el-row>
     </div>
@@ -47,7 +47,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-            <el-button @click="showAdminUserEditComponent(scope.row, scope.$index)" icon="el-icon-edit"
+            <el-button @click="showTeacherEditComponent(scope.row, scope.$index)" icon="el-icon-edit"
                        size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
@@ -68,30 +68,30 @@
       </el-pagination>
     </div>
     <!--UserCreate-->
-    <el-dialog title="提示" :visible.sync="adminUserCreateStatus" width="50%">
-      <AdminUserCreate @created="adminUserCreated" :key="Date.now()"></AdminUserCreate>
+    <el-dialog title="提示" :visible.sync="teacherCreateStatus" width="50%">
+      <TeacherCreate @created="teacherCreated" :key="Date.now()"></TeacherCreate>
     </el-dialog>
     <!--UserEdit-->
-    <el-dialog title="提示" :visible.sync="adminUserEditStatus" width="50%">
-      <AdminUserEdit :adminUser="adminUserEditBindAdminUser" @updated="adminUserUpdated"
-                     :key="Date.now()"></AdminUserEdit>
+    <el-dialog title="提示" :visible.sync="teacherEditStatus" width="50%">
+      <TeacherEdit :teacher="teacherEditBindTeacher" @updated="teacherUpdated"
+                     :key="Date.now()"></TeacherEdit>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import { getAdminUsers, deleteAdminUser } from '@/api/adminUsers'
-  import AdminUserEdit from './AdminUserEdit'
-  import AdminUserCreate from './AdminUserCreate'
+  import { getTeachers, deleteTeacher } from '@/api/teachers'
+  import TeacherEdit from './TeacherEdit'
+  import TeacherCreate from './TeacherCreate'
   
   export default {
-    name: 'AdminUserTable',
+    name: 'TeacherTable',
     created() {
-      this.fetchAdminUsers()
+      this.fetchTeachers()
     },
     components: {
-      AdminUserCreate,
-      AdminUserEdit
+      TeacherCreate,
+      TeacherEdit
     },
     data() {
       return {
@@ -109,15 +109,15 @@
         },
         include: null,
         loading: false,
-        adminUserCreateStatus: false,
-        adminUserCreateBindGroup: null,
-        adminUserEditStatus: false,
-        adminUserEditBindAdminUser: null,
-        adminUserEditIndex: null
+        teacherCreateStatus: false,
+        teacherCreateBindGroup: null,
+        teacherEditStatus: false,
+        teacherEditBindTeacher: null,
+        teacherEditIndex: null
       }
     },
     methods: {
-      fetchAdminUsers() {
+      fetchTeachers() {
         const queryString = {}
         this.query.value && (queryString[this.query.label] = `%${this.query.value}%`)
         queryString.include = this.include
@@ -125,7 +125,7 @@
         queryString.page = this.currentPage
         queryString.per_page = this.perPage
         this.loading = true
-        getAdminUsers(queryString).then(response => {
+        getTeachers(queryString).then(response => {
           this.tableData = response.data
           this.currentPage = response.meta.pagination.current_page
           this.perPage = response.meta.pagination.per_page
@@ -135,47 +135,47 @@
         })
       },
       handleSearch() {
-        this.fetchAdminUsers()
+        this.fetchTeachers()
       },
       handleSizeChange(pageNumber) {
         this.perPage = pageNumber
-        this.fetchAdminUsers()
+        this.fetchTeachers()
       },
       handleCurrentChange(currentPage) {
         this.currentPage = currentPage
-        this.fetchAdminUsers()
+        this.fetchTeachers()
       },
       handleSortChange({ column, prop, order }) {
         this.sort = { prop, order }
-        this.fetchAdminUsers()
+        this.fetchTeachers()
       },
-      handleDelete(adminUser, index) {
-        this.$confirm(`此操作将永久删除 ${adminUser.name} 用户, 是否继续?`, '提示', {
+      handleDelete(teacher, index) {
+        this.$confirm(`此操作将永久删除 ${teacher.name} 用户, 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          return deleteAdminUser(adminUser.id)
+          return deleteTeacher(teacher.id)
         }).then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
         })
       },
-      showAdminUserCreateComponent() {
-        this.adminUserCreateStatus = true
+      showTeacherCreateComponent() {
+        this.teacherCreateStatus = true
       },
-      adminUserCreated(adminUser) {
-        this.adminUserCreateStatus = false
-        this.tableData.push(adminUser)
+      teacherCreated(teacher) {
+        this.teacherCreateStatus = false
+        this.tableData.push(teacher)
       },
-      showAdminUserEditComponent(adminUser, index) {
-        this.adminUserEditBindAdminUser = adminUser
-        this.adminUserEditIndex = index
-        this.adminUserEditStatus = true
+      showTeacherEditComponent(teacher, index) {
+        this.teacherEditBindTeacher = teacher
+        this.teacherEditIndex = index
+        this.teacherEditStatus = true
       },
-      adminUserUpdated(newAdminUser) {
-        this.tableData.splice(this.adminUserEditIndex, 1, newAdminUser)
-        this.adminUserEditStatus = false
+      teacherUpdated(newTeacher) {
+        this.tableData.splice(this.teacherEditIndex, 1, newTeacher)
+        this.teacherEditStatus = false
       }
     }
   }

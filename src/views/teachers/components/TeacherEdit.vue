@@ -26,7 +26,7 @@
       </el-row>
     
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button type="primary" @click="onSubmit">立即更新</el-button>
         <el-button @click="resetForm('form')">重置表单</el-button>
       </el-form-item>
     </el-form>
@@ -34,15 +34,22 @@
 </template>
 
 <script>
-  import { storeAdminUser } from '@/api/adminUsers'
+  import { updateTeacher } from '@/api/teachers'
   
   export default {
-    name: 'AdminUserCreate',
+    name: 'TeacherEdit',
+    created() {
+      this.form.name = this.teacher.name
+      this.form.email = this.teacher.email
+      this.form.phone = this.teacher.phone
+    },
+    props: ['teacher'],
     data() {
       return {
         form: {
           name: null,
           email: null,
+          student_id: null,
           phone: null
         },
         loading: false
@@ -51,9 +58,9 @@
     methods: {
       onSubmit() {
         this.loading = true
-        storeAdminUser(this.form).then(response => {
-          this.$message.success('创建成功')
-          this.$emit('created', response)
+        updateTeacher(this.teacher.id, this.form).then(response => {
+          this.$message.success('更新成功')
+          this.$emit('updated', response)
           this.resetForm('form')
         }).finally(() => {
           this.loading = false

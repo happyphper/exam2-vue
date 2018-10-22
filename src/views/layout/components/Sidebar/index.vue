@@ -32,7 +32,7 @@ export default {
       })
       routes = Object.values(routes)
       if (!isAdmin) {
-        routes.find(item => item.path === '/users').hidden = true
+        routes.find(item => item.path === '/teachers').hidden = true
       }
       return routes
     },

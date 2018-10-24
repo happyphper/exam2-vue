@@ -45,7 +45,6 @@
         }).finally(() => {
           this.loading = false
         })
-        console.log(this.data)
       }
     }
   }

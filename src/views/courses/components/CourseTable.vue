@@ -29,7 +29,7 @@
       <el-table-column
         width="60"
         label="考试"
-        prop="questions_count">
+        prop="tests_count">
       </el-table-column>
       <el-table-column
         label="创建人"
@@ -153,16 +153,18 @@
         questionImportBindHeaders: null,
         questionImportBindData: null,
         questionImportStatus: null,
-        questionImportExampleHeaders: ['title', 'type', 'option1', 'option2', 'option3', 'option4', 'answer', 'explain'],
+        questionImportExampleHeaders: ['title', 'type', 'chapter', 'section', 'option1', 'option2', 'option3', 'option4', 'answer', 'explain'],
         questionImportExampleData: [
           {
             title: '题干',
             type: 'single/multiple(单选/多选)',
+            chapter: '章（可选）',
+            section: '节（可选）',
             option1: '选项1',
             option2: '选项2',
             option3: '选项3',
             option4: '选项4',
-            answer: '正确答案，如:1',
+            answer: '正确答案，如:[1]、[1,2]',
             explain: '答案解析（选填）'
           }
         ]
@@ -246,7 +248,7 @@
       },
       importCreated(count) {
         this.questionImportStatus = false
-        this.questionImportBindCourse.questions_count += count
+        this.questionImportBindCourse.questions_count  = this.questionImportBindCourse.questions_count + count
       }
     }
   }

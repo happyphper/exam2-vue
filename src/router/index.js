@@ -163,6 +163,20 @@ export const constantRouterMap = [
     ]
   },
 
+  {
+    path: '/password',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        name: 'passwordIndex',
+        component: () => import('@/views/password/index'),
+        meta: { title: '修改密码', icon: 'form' }
+      }
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 

@@ -2,16 +2,16 @@
   <div>
     <div class="search-bar">
       <el-row :gutter="20">
-        <el-col :span="4">
+        <el-col :span="6">
           <el-input placeholder="请输入考试关键字" v-model="query.title"></el-input>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="6">
           <el-input placeholder="请输入课程关键字" v-model="query.courseTitle"></el-input>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="6">
           <el-input placeholder="请输入班级关键字" v-model="query.groupName"></el-input>
         </el-col>
-        <el-col :span="4" :offset="2">
+        <el-col :span="6">
           <el-button icon="el-icon-search" circle @click="handleSearch"></el-button>
           <el-button  type="success" icon="el-icon-plus"  @click="showTestCreateComponent" circle></el-button>
         </el-col>

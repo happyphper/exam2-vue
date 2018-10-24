@@ -2,7 +2,7 @@
   <div>
     <div class="search-bar">
       <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :span="12">
           <el-input placeholder="请输入内容" v-model="query.value" class="input-with-select">
             <el-select v-model="query.label" slot="prepend" placeholder="请选择" style="width: 120px">
               <el-option label="课程名称" value="title"></el-option>
@@ -10,7 +10,7 @@
             <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
           </el-input>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="8">
           <el-button type="success" icon="el-icon-plus" @click="showCourseCreateComponent" circle></el-button>
         </el-col>
       </el-row>
@@ -166,6 +166,18 @@
             option4: '选项4',
             answer: '正确答案，如:[1]、[1,2]',
             explain: '答案解析（选填）'
+          },
+          {
+            title: '1+1=?',
+            type: 'single',
+            chapter: '1',
+            section: '1',
+            option1: '1',
+            option2: '2',
+            option3: '3',
+            option4: '4',
+            answer: '[2]',
+            explain: '1+1=2为正解'
           }
         ]
       }

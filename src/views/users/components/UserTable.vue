@@ -2,7 +2,7 @@
   <div>
     <div class="search-bar">
       <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :span="12">
           <el-input placeholder="请输入查询内容" v-model="query.value" class="input-with-select">
             <el-select v-model="query.label" slot="prepend" placeholder="请选择" style="width: 80px">
               <el-option label="姓名" value="name"></el-option>
@@ -13,7 +13,7 @@
             <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
           </el-input>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="12">
           <el-input placeholder="请输入群组名称" v-model="groupsName" :disabled="disableGroupSearch">
             <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
           </el-input>

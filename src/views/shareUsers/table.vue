@@ -2,10 +2,8 @@
   <div>
     <div class="search-bar">
       <el-row :gutter="20">
-        <el-col :span="6">
-          <el-col :span="2">
-            <el-button type="success" icon="el-icon-plus" @click="handleCreate" circle></el-button>
-          </el-col>
+        <el-col :span="12">
+          <el-button type="success" icon="el-icon-plus" @click="handleCreate" circle></el-button>
         </el-col>
       </el-row>
     </div>

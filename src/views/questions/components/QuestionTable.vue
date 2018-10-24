@@ -2,19 +2,28 @@
   <div>
     <div class="search-bar">
       <el-row :gutter="20">
-        <el-col :span="4">
+        <el-col :span="6">
           <el-input placeholder="请输入题目关键字" v-model="query.title"></el-input>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="6">
           <el-input placeholder="请输入课程关键字" v-model="query.courseTitle"></el-input>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="6">
           <el-select v-model="query.type" placeholder="请选择类型">
             <el-option label="单选" value="single"></el-option>
             <el-option label="多选" value="multiple"></el-option>
           </el-select>
         </el-col>
-        <el-col :span="4" :offset="2">
+      </el-row>
+      
+      <el-row :gutter="20" style="margin-top: 10px;">
+        <el-col :span="6">
+          <el-input placeholder="请输入章" v-model="query.chapter"></el-input>
+        </el-col>
+        <el-col :span="6">
+          <el-input placeholder="请输入节" v-model="query.section"></el-input>
+        </el-col>
+        <el-col :span="6">
           <el-button icon="el-icon-search" circle @click="handleSearch"></el-button>
           <el-button type="success" icon="el-icon-plus" circle @click="showQuestionCreateComponent"></el-button>
         </el-col>
@@ -47,6 +56,16 @@
       <el-table-column
         prop="course.title"
         label="课程">
+      </el-table-column>
+      <el-table-column
+        width="50"
+        prop="chapter"
+        label="章">
+      </el-table-column>
+      <el-table-column
+        width="50"
+        prop="section"
+        label="节">
       </el-table-column>
       <el-table-column
         prop="answer"
@@ -144,6 +163,8 @@
           courseTitle: '',
           title: null,
           type: null,
+          chapter: null,
+          section: null,
           include: 'course'
         },
         loading: false,
@@ -162,6 +183,8 @@
         this.query.title && (queryString.title = `%${this.query.title}%`)
         this.query.courseTitle && (queryString['course:title'] = `%${this.query.courseTitle}%`)
         this.query.type && (queryString.type = this.query.type)
+        this.query.chapter && (queryString.chapter = this.query.chapter)
+        this.query.section && (queryString.section = this.query.section)
         this.query.include && (queryString.include = this.query.include)
         queryString.page = this.currentPage
         queryString.per_page = this.perPage

@@ -2,7 +2,7 @@
   <div>
     <div class="search-bar">
       <el-row :gutter="20">
-        <el-col :span="4">
+        <el-col :span="6">
           <el-select
             v-model="query.course_id"
             filterable
@@ -15,7 +15,7 @@
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="6">
           <el-select
             v-model="query.group_id"
             filterable
@@ -32,7 +32,7 @@
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-date-picker
             v-model="query.created_at"
             type="daterange"

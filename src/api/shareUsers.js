@@ -1,17 +1,19 @@
 import request from '@/utils/request'
 
-export function getShareUsers() {
+export function getShareUsers(params = { include: 'share_user' }) {
   return request({
     url: `/share-users`,
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
-export function storeShareUser(phone) {
+export function storeShareUser(phone, params = { include: 'share_user' }) {
   return request({
     url: `/share-users`,
     method: 'post',
-    data: { phone }
+    data: { phone },
+    params
   })
 }
 export function deleteShareUser(share_user_id) {

@@ -42,6 +42,7 @@ export const constantRouterMap = [
   {
     path: '/categories',
     component: Layout,
+    hidden: true,
     name: 'Category',
     children: [{
       path: 'index',

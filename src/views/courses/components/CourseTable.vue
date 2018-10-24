@@ -248,7 +248,7 @@
       },
       importCreated(count) {
         this.questionImportStatus = false
-        this.questionImportBindCourse.questions_count  = this.questionImportBindCourse.questions_count + count
+        this.questionImportBindCourse.questions_count = this.questionImportBindCourse.questions_count + count
       }
     }
   }

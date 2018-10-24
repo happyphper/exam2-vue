@@ -43,6 +43,22 @@
   
       <el-row :gutter="20">
         <el-col :span="12">
+          <el-form-item label="章">
+            <el-input v-model="form.chapter"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+  
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="节">
+            <el-input v-model="form.section"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+  
+      <el-row :gutter="20">
+        <el-col :span="12">
           <el-form-item label="答案">
             <span>{{ form.answer }}</span>
           </el-form-item>
@@ -69,8 +85,9 @@
               :file-list="uploadedList"
               :data="uploadData"
               :on-preview="handlePreview"
+              :disabled="uploading"
             >
-              <el-button size="small" type="primary" @click="handleClick(index)">点击上传</el-button>
+              <el-button size="small" type="primary" @click="handleClick(index)" :loading="uploading">点击上传</el-button>
             </el-upload>
           </el-col>
           <el-col :span="3">
@@ -115,6 +132,8 @@
           course_id: null,
           title: '',
           type: 'single',
+          chapter: null,
+          section: null,
           options: [
             { id: 1, content: '', type: 'image', right: false },
             { id: 2, content: '', type: 'image', right: false },
@@ -134,6 +153,7 @@
           key: ''
         },
         uploadedList: [],
+        uploading: false,
         optionIndex: 0,
         previewStatus: false,
         previewUrl: ''
@@ -152,7 +172,7 @@
         this.loading = true
         storeQuestion(this.form).then((response) => {
           this.$message.success('添加成功')
-          this.$emit('textCreated', response)
+          this.$emit('imageCreated', response)
         }).finally(() => {
           this.loading = false
         })
@@ -179,12 +199,14 @@
         }
       },
       handleUploadSuccess(res) {
+        this.uploading = false
         this.form.options[this.optionIndex].content = res.key
       },
       handleClick(index) {
         this.optionIndex = index
       },
       handleBeforeUpload() {
+        this.uploading = true
         return getToken().then(response => {
           this.uploadData.token = response.token
           this.uploadData.key = response.name
@@ -194,11 +216,15 @@
         })
       },
       handleBeforeRemove(file, fileList) {
-        deleteImage(file.response.hash)
+        this.form.options.forEach(item => {
+          if (item.content === file.response.key) {
+            item.content = null
+          }
+        })
+        deleteImage(file.response.key)
         return true
       },
       handlePreview(file) {
-        console.log(file)
         this.previewUrl = file.url
         this.previewStatus = true
       }

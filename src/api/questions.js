@@ -8,11 +8,12 @@ export function getQuestions(params) {
   })
 }
 
-export function storeQuestion(data) {
+export function storeQuestion(data, params = { include: 'course' }) {
   return request({
     url: '/questions',
     method: 'post',
-    data
+    data,
+    params
   })
 }
 
@@ -27,7 +28,7 @@ export function bulk(course_id, questions) {
   })
 }
 
-export function updateQuestion(questionId, data, params = null) {
+export function updateQuestion(questionId, data, params = { include: 'course' }) {
   return request({
     url: `/questions/${questionId}`,
     method: 'put',

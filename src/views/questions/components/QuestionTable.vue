@@ -219,7 +219,7 @@
       },
       questionCreated(question) {
         this.questionCreateStatus = false
-        this.tableData.push(question)
+        this.tableData.unshift(question)
       },
       showQuestionEditComponent(question) {
         this.questionEditBindQuestion = question

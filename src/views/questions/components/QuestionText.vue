@@ -43,6 +43,22 @@
       
       <el-row :gutter="20">
         <el-col :span="12">
+          <el-form-item label="章">
+            <el-input v-model="form.chapter"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="节">
+            <el-input v-model="form.section"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      
+      <el-row :gutter="20">
+        <el-col :span="12">
           <el-form-item label="答案">
             <span>{{ form.answer }}</span>
           </el-form-item>
@@ -100,6 +116,8 @@
           course_id: null,
           title: '',
           type: 'single',
+          chapter: null,
+          section: null,
           options: [
             { id: 1, content: '', type: 'text', right: false },
             { id: 2, content: '', type: 'text', right: false },
@@ -129,7 +147,6 @@
         storeQuestion(this.form).then((response) => {
           this.$message.success('添加成功')
           this.$emit('textCreated', response)
-          console.log('text')
         }).finally(() => {
           this.loading = false
         })

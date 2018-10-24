@@ -11,8 +11,7 @@
               reserve-keyword
               :remote-method="fetchCourses"
               :loading="courseSelectListLoading"
-              placeholder="请输入关键字自动搜索"
-              :disabled="courseSelectListDisabled">
+              placeholder="请输入关键字自动搜索">
               <el-option
                 v-for="course in courseSelectList"
                 :key="course.id"
@@ -37,6 +36,22 @@
           <el-form-item label="类型">
             <el-radio v-model="form.type" label="single">单选</el-radio>
             <el-radio v-model="form.type" label="multiple">多选</el-radio>
+          </el-form-item>
+        </el-col>
+      </el-row>
+  
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="章">
+            <el-input v-model="form.chapter"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+  
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="节">
+            <el-input v-model="form.section"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -90,6 +105,8 @@
       this.courseSelectList.push(this.question.course)
       this.form.title = this.question.title
       this.form.type = this.question.type
+      this.form.chapter = this.question.chapter
+      this.form.section = this.question.section
       this.form.course_id = this.question.course_id
       this.form.options = this.question.options
       this.form.answer = this.question.answer

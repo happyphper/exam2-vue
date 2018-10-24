@@ -9,7 +9,10 @@ export function getToken() {
 
 export function deleteImage(name) {
   return request({
-    url: `/cloud-storage/${name}`,
-    method: 'delete'
+    url: `/cloud-storage`,
+    method: 'delete',
+    data: {
+      key: name
+    }
   })
 }

@@ -95,9 +95,9 @@
       <el-table-column
         label="操作">
         <template slot-scope="scope">
-          <template v-if="testId">
+          <template v-if="examId">
             <el-tooltip class="item" effect="dark" content="添加" placement="top">
-              <el-button @click="handleAddQuestionToTest(scope.row)" icon="el-icon-plus"
+              <el-button @click="handleAddQuestionToExam(scope.row)" icon="el-icon-plus"
                          size="small"></el-button>
             </el-tooltip>
           </template>
@@ -139,7 +139,7 @@
   import QuestionCreate from './QuestionCreate'
   import QuestionEdit from './QuestionEdit'
   import { getQuestions, deleteQuestion } from '@/api/questions'
-  import { storeTestQuestion } from '@/api/testQuestions'
+  import { storeExamQuestion } from '@/api/examQuestions'
   
   export default {
     name: 'QuestionTable',
@@ -148,7 +148,7 @@
       this.$route.query.courseTitle && (this.query.courseTitle = this.$route.query.courseTitle)
       this.fetchQuestions()
     },
-    props: ['testId'],
+    props: ['examId'],
     data() {
       return {
         tableData: [],
@@ -240,7 +240,7 @@
           this.tableData.splice(index, 1)
         })
       },
-      handleAddQuestionToTest(question) {
+      handleAddQuestionToExam(question) {
         let score = 0
         this.$prompt('请输入分值', '提示', {
           confirmButtonText: '确定',
@@ -250,7 +250,7 @@
         }).then(({ value }) => {
           this.loading = true
           score = value
-          return storeTestQuestion(this.testId, question.id, value)
+          return storeExamQuestion(this.examId, question.id, value)
         }).then(() => {
           this.$message.success('添加成功')
           question.score = score

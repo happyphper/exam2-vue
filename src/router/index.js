@@ -78,20 +78,20 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/tests',
+    path: '/exams',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'testIndex',
-        component: () => import('@/views/tests/index'),
+        name: 'examIndex',
+        component: () => import('@/views/exams/index'),
         meta: { title: '考试管理', icon: 'form' }
       },
       {
-        path: '/tests/:test/paper',
-        name: 'testPaper',
+        path: '/exams/:exam/paper',
+        name: 'examPaper',
         hidden: true,
-        component: () => import('@/views/tests/paper'),
+        component: () => import('@/views/exams/paper'),
         meta: { title: '考题管理', icon: 'form' }
       }
     ]
@@ -137,14 +137,14 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/test-results',
+    path: '/exam-results',
     component: Layout,
     hidden: true,
     children: [
       {
         path: 'index',
-        name: 'testResultIndex',
-        component: () => import('@/views/testResults/index'),
+        name: 'examResultIndex',
+        component: () => import('@/views/examResults/index'),
         meta: { title: '考试记录', icon: 'form' }
       }
     ]

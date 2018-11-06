@@ -78,24 +78,24 @@
 </template>
 
 <script>
-  import { updateTest } from '@/api/tests'
+  import { updateExam } from '@/api/exams'
   import { getClassrooms } from '@/api/classrooms'
   import { getCourses } from '@/api/courses'
   
   export default {
-    name: 'TestEdit',
+    name: 'ExamEdit',
     created() {
-      this.form.title = this.test.title
-      this.form.type = this.test.type
-      this.form.started_at = this.test.started_at
-      this.form.ended_at = this.test.ended_at
-      this.classroomSelectList = this.test.classrooms.data
-      this.test.classrooms.data.forEach(item => this.form.classroom_ids.push(item.id))
+      this.form.title = this.exam.title
+      this.form.type = this.exam.type
+      this.form.started_at = this.exam.started_at
+      this.form.ended_at = this.exam.ended_at
+      this.classroomSelectList = this.exam.classrooms.data
+      this.exam.classrooms.data.forEach(item => this.form.classroom_ids.push(item.id))
   
-      this.courseSelectList.push(this.test.course)
-      this.form.course_id = this.test.course.id
+      this.courseSelectList.push(this.exam.course)
+      this.form.course_id = this.exam.course.id
     },
-    props: ['test', 'course'],
+    props: ['exam', 'course'],
     data() {
       return {
         form: {
@@ -131,7 +131,7 @@
       },
       onSubmit() {
         this.loading = true
-        updateTest(this.test.id, this.form).then(response => {
+        updateExam(this.exam.id, this.form).then(response => {
           this.$emit('updated', response)
         }).finally(() => {
           this.loading = false

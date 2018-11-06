@@ -9,7 +9,7 @@
   
   export default {
     name: 'ErrorQuestion',
-    props: ['testId', 'classroomId'],
+    props: ['examId', 'classroomId'],
     created() {
       this.fetchData()
     },
@@ -24,7 +24,7 @@
     methods: {
       fetchData() {
         this.loading = true
-        getErrorQuestion(this.testId, this.classroomId).then(response => {
+        getErrorQuestion(this.examId, this.classroomId).then(response => {
           this.data = response.data
           this.headers = response.meta.headers
           this.values = response.meta.values

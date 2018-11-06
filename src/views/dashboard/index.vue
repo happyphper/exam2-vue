@@ -41,14 +41,14 @@
         </router-link>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <router-link :to="{ name: 'testIndex' }">
+        <router-link :to="{ name: 'examIndex' }">
           <div class="card-panel">
             <div class="card-panel-icon-wrapper icon-shopping">
-              <svg-icon icon-class="test" class-name="card-panel-icon"/>
+              <svg-icon icon-class="exam" class-name="card-panel-icon"/>
             </div>
             <div class="card-panel-description">
               <div class="card-panel-text">创建考试</div>
-              <count-to :start-val="0" :end-val="tests_count" :duration="3600" class="card-panel-num"/>
+              <count-to :start-val="0" :end-val="exams_count" :duration="3600" class="card-panel-num"/>
             </div>
           </div>
         </router-link>
@@ -70,7 +70,7 @@
       getDashboard().then(response => {
         this.courses_count = response.courses_count
         this.questions_count = response.questions_count
-        this.tests_count = response.tests_count
+        this.exams_count = response.exams_count
         this.classrooms_count = response.classrooms_count
       })
     },
@@ -78,7 +78,7 @@
       return {
         courses_count: 0,
         questions_count: 0,
-        tests_count: 0,
+        exams_count: 0,
         classrooms_count: 0
       }
     },

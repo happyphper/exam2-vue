@@ -3,7 +3,7 @@
     <div class="search-bar">
       <el-row :gutter="20">
         <!--<el-col :span="4">-->
-          <!--<el-input placeholder="考试名称" v-model="query.testTitle"></el-input>-->
+          <!--<el-input placeholder="考试名称" v-model="query.examTitle"></el-input>-->
         <!--</el-col>-->
         <!--<el-col :span="4">-->
           <!--<el-input placeholder="班级名称" v-model="query.classroomName"></el-input>-->
@@ -20,7 +20,7 @@
     <el-table :data="tableData" border style="width: 100%" @sort-change="handleSortChange" v-loading="loading">
       <el-table-column
         label="考试"
-        prop="test.title">
+        prop="exam.title">
       </el-table-column>
       <el-table-column
         label="班级"
@@ -90,7 +90,7 @@
 </template>
 
 <script>
-  import { getTestResults } from '@/api/testResults'
+  import { getExamResults } from '@/api/examResults'
   
   import UserGradeCurve from './UserGradeCurve'
   
@@ -100,11 +100,11 @@
       UserGradeCurve
     },
     created() {
-      this.query.testId = this.$route.query.testId
+      this.query.examId = this.$route.query.examId
       this.query.classroomId = this.$route.query.classroomId
-      this.fetchTestResults()
+      this.fetchExamResults()
     },
-    props: ['testId', 'classroomId'],
+    props: ['examId', 'classroomId'],
     data() {
       return {
         tableData: [],
@@ -116,25 +116,25 @@
           order: 'desc'
         },
         query: {
-          testId: '',
+          examId: '',
           classroomId: '',
-          testTitle: '',
+          examTitle: '',
           classroomName: '',
           userName: ''
         },
-        include: 'test,classroom,user',
+        include: 'exam,classroom,user',
         loading: false,
         userGradeCurveBindUser: null,
         userGradeCurveComponentStatus: false
       }
     },
     methods: {
-      fetchTestResults() {
+      fetchExamResults() {
         const queryString = {}
-        this.query.testId && (queryString.test_id = this.query.testId)
+        this.query.examId && (queryString.exam_id = this.query.examId)
         this.query.classroomId && (queryString.classroom_id = this.query.classroom_id)
-        this.query.testTitle && (queryString['test:title'] = `%${this.query.testTitle}%`)
-        this.query.testTitle && (queryString['test:title'] = `%${this.query.testTitle}%`)
+        this.query.examTitle && (queryString['exam:title'] = `%${this.query.examTitle}%`)
+        this.query.examTitle && (queryString['exam:title'] = `%${this.query.examTitle}%`)
         this.query.classroomName && (queryString['classroom:name'] = `%${this.query.classroomName}%`)
         this.query.userName && (queryString['user:name'] = `%${this.query.userName}%`)
         queryString.include = this.include
@@ -142,7 +142,7 @@
         queryString.page = this.currentPage
         queryString.per_page = this.perPage
         this.loading = true
-        getTestResults(queryString).then(response => {
+        getExamResults(queryString).then(response => {
           this.tableData = response.data
           this.currentPage = response.meta.pagination.current_page
           this.perPage = response.meta.pagination.per_page
@@ -152,7 +152,7 @@
         })
       },
       handleSearch() {
-        this.fetchTestResults()
+        this.fetchExamResults()
       },
       handleSizeChange(pageNumber) {
         this.perPage = pageNumber

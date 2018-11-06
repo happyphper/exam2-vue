@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
-    <TestTable></TestTable>
+    <ExamTable></ExamTable>
   </div>
 </template>
 
 <script>
-  import TestTable from './components/TestTable'
+  import ExamTable from './components/ExamTable'
   
   export default {
-    name: 'tests',
+    name: 'exams',
     components: {
-      TestTable
+      ExamTable
     },
     data() {
       return {}

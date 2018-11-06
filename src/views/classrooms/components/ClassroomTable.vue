@@ -40,9 +40,9 @@
             <el-button @click="showUserCreateComponent(scope.row)" icon="el-icon-plus" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="查看附属考试" placement="top">
-            <router-link :to="{ name: 'testIndex', query: { classroomName: scope.row.name }}">
+            <router-link :to="{ name: 'examIndex', query: { classroomName: scope.row.name }}">
               <el-button size="small">
-                <svg-icon icon-class="test" />
+                <svg-icon icon-class="exam" />
               </el-button>
             </router-link>
           </el-tooltip>

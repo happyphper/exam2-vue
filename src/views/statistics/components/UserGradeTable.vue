@@ -52,8 +52,8 @@
       <el-table-column label="姓名" prop="name"></el-table-column>
       <el-table-column label="班级" prop="classroom"></el-table-column>
       <el-table-column label="课程" prop="course"></el-table-column>
-      <el-table-column v-for="test in currentRow.tests" :key="test.id" :label="test.title">
-        <template slot-scope="scope">{{ test.score }}</template>
+      <el-table-column v-for="exam in currentRow.exams" :key="exam.id" :label="exam.title">
+        <template slot-scope="scope">{{ exam.score }}</template>
       </el-table-column>
       <el-table-column label="平均成绩" prop="average"></el-table-column>
     </el-table>
@@ -144,8 +144,8 @@
       formatHeaders(data) {
         const headers = ['姓名', '课程', '班级']
         data.map(item => {
-          item.tests.forEach(test => {
-            headers.push(test.title)
+          item.exams.forEach(exam => {
+            headers.push(exam.title)
           })
         })
         headers.push('平均分')
@@ -154,8 +154,8 @@
       formatFiedls(data) {
         const fields = ['name', 'course', 'classroom']
         data.map(item => {
-          item.tests.forEach(test => {
-            fields.push(test.id)
+          item.exams.forEach(exam => {
+            fields.push(exam.id)
           })
         })
         fields.push('average')
@@ -166,7 +166,7 @@
           if (item[field]) {
             return item[field]
           }
-          const row = item.tests.find(test => test.id === field)
+          const row = item.exams.find(exam => exam.id === field)
           if (row && row.score) {
             return row.score
           }

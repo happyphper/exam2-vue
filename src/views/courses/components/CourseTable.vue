@@ -29,7 +29,7 @@
       <el-table-column
         width="60"
         label="考试"
-        prop="tests_count">
+        prop="exams_count">
       </el-table-column>
       <el-table-column
         label="创建人"
@@ -59,9 +59,9 @@
             </router-link>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="查看附属考试" placement="top">
-            <router-link :to="{ name: 'testIndex', query: { courseTitle: scope.row.title }}">
+            <router-link :to="{ name: 'examIndex', query: { courseTitle: scope.row.title }}">
               <el-button size="small">
-                <svg-icon icon-class="test" />
+                <svg-icon icon-class="exam" />
               </el-button>
             </router-link>
           </el-tooltip>

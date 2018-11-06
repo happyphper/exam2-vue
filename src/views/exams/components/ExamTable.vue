@@ -13,7 +13,7 @@
         </el-col>
         <el-col :span="6">
           <el-button icon="el-icon-search" circle @click="handleSearch"></el-button>
-          <el-button  type="success" icon="el-icon-plus"  @click="showTestCreateComponent" circle></el-button>
+          <el-button  type="success" icon="el-icon-plus"  @click="showExamCreateComponent" circle></el-button>
         </el-col>
       </el-row>
     </div>
@@ -30,7 +30,7 @@
       <el-table-column label="关联班级">
         <template slot-scope="scope">
           <el-button size="small" v-for="classroom in scope.row.classrooms.data" :key="classroom.id">
-            <router-link :to="{ name: 'testResultIndex', query: { testId: scope.row.id, classroomId: classroom.id }}">{{ classroom.title }}</router-link>
+            <router-link :to="{ name: 'examResultIndex', query: { examId: scope.row.id, classroomId: classroom.id }}">{{ classroom.title }}</router-link>
           </el-button>
         </template>
       </el-table-column>
@@ -48,7 +48,7 @@
         prop="status_translate"
         label="状态">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="showTestEndComponent(scope.row)">{{ scope.row.status_translate }}</el-button>
+          <el-button type="primary" size="mini" @click="showExamEndComponent(scope.row)">{{ scope.row.status_translate }}</el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -56,7 +56,7 @@
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="考题" placement="top">
             <el-button type="success" size="small">
-              <router-link :to="{ name: 'testPaper', params: { test: scope.row.id }}">考题</router-link>
+              <router-link :to="{ name: 'examPaper', params: { exam: scope.row.id }}">考题</router-link>
             </el-button>
           </el-tooltip>
         </template>
@@ -64,7 +64,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-            <el-button @click="showTestEditComponent(scope.row, scope.$index)" icon="el-icon-edit" size="small"></el-button>
+            <el-button @click="showExamEditComponent(scope.row, scope.$index)" icon="el-icon-edit" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
             <el-button @click="handleDelete(scope.row, scope.$index)" icon="el-icon-delete" size="small"></el-button>
@@ -86,40 +86,40 @@
     </div>
     
     <!--CreateModal-->
-    <el-dialog title="提示" :visible.sync="testCreateStatus" width="50%">
-      <TestCreate @created="testCreated" :key="Date.now()"></TestCreate>
+    <el-dialog title="提示" :visible.sync="examCreateStatus" width="50%">
+      <ExamCreate @created="examCreated" :key="Date.now()"></ExamCreate>
     </el-dialog>
     <!--EditModal-->
-    <el-dialog title="提示" :visible.sync="testEditStatus" width="50%">
-      <TestEdit :test="testEditBindTest" @updated="testUpdated" :key="Date.now()"></TestEdit>
+    <el-dialog title="提示" :visible.sync="examEditStatus" width="50%">
+      <ExamEdit :exam="examEditBindExam" @updated="examUpdated" :key="Date.now()"></ExamEdit>
     </el-dialog>
     <!--EditModal-->
-    <el-dialog title="提示" :visible.sync="testEndBindStatus" width="50%">
-      <TestEnd :test="testEndBindTest" @ended="testEnded" :key="Date.now()"></TestEnd>
+    <el-dialog title="提示" :visible.sync="examEndBindStatus" width="50%">
+      <ExamEnd :exam="examEndBindExam" @ended="examEnded" :key="Date.now()"></ExamEnd>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import { getTests, deleteTest } from '@/api/tests'
+  import { getExams, deleteExam } from '@/api/exams'
   
-  import TestCreate from './TestCreate'
-  import TestEdit from './TestEdit'
-  import TestEnd from './TestEnd'
+  import ExamCreate from './ExamCreate'
+  import ExamEdit from './ExamEdit'
+  import ExamEnd from './ExamEnd'
   import Paper from '../paper'
   
   export default {
-    name: 'TestTable',
+    name: 'ExamTable',
     components: {
       Paper,
-      TestCreate,
-      TestEdit,
-      TestEnd
+      ExamCreate,
+      ExamEdit,
+      ExamEnd
     },
     created() {
       this.$route.query.courseTitle && (this.query.courseTitle = this.$route.query.courseTitle)
       this.$route.query.classroomName && (this.query.classroomName = this.$route.query.classroomName)
-      this.fetchTests()
+      this.fetchExams()
     },
     data() {
       return {
@@ -138,16 +138,16 @@
         },
         include: 'classrooms,course',
         loading: false,
-        testCreateStatus: false,
-        testEditStatus: false,
-        testEditBindTest: null,
-        testEditIndex: 0,
-        testEndBindStatus: false,
-        testEndBindTest: null
+        examCreateStatus: false,
+        examEditStatus: false,
+        examEditBindExam: null,
+        examEditIndex: 0,
+        examEndBindStatus: false,
+        examEndBindExam: null
       }
     },
     methods: {
-      fetchTests() {
+      fetchExams() {
         const queryString = {}
         this.query.title && (queryString['title'] = `%${this.query.title}%`)
         this.query.courseTitle && (queryString['course:title'] = `%${this.query.courseTitle}%`)
@@ -157,7 +157,7 @@
         queryString.page = this.currentPage
         queryString.per_page = this.perPage
         this.loading = true
-        getTests(queryString).then(response => {
+        getExams(queryString).then(response => {
           this.tableData = response.data
           this.currentPage = response.meta.pagination.current_page
           this.perPage = response.meta.pagination.per_page
@@ -167,7 +167,7 @@
         })
       },
       handleSearch() {
-        this.fetchTests()
+        this.fetchExams()
       },
       handleSizeChange(pageNumber) {
         this.perPage = pageNumber
@@ -178,43 +178,43 @@
       handleSortChange({ column, prop, order }) {
         this.sort = { prop, order }
       },
-      showTestCreateComponent() {
-        this.testCreateStatus = true
+      showExamCreateComponent() {
+        this.examCreateStatus = true
       },
-      testCreated(response) {
+      examCreated(response) {
         this.tableData.push(response)
-        this.testCreateStatus = false
+        this.examCreateStatus = false
       },
-      showTestEditComponent(test, index) {
-        this.testEditBindTest = test
-        this.testEditIndex = index
-        this.testEditStatus = true
+      showExamEditComponent(exam, index) {
+        this.examEditBindExam = exam
+        this.examEditIndex = index
+        this.examEditStatus = true
       },
-      testUpdated(response) {
-        this.testEditStatus = false
-        this.tableData.splice(this.testEditIndex, 1, response)
+      examUpdated(response) {
+        this.examEditStatus = false
+        this.tableData.splice(this.examEditIndex, 1, response)
       },
-      handleDelete(test, index) {
-        this.$confirm(`此操作将 ${test.title} 考试删除, 是否继续?`, '提示', {
+      handleDelete(exam, index) {
+        this.$confirm(`此操作将 ${exam.title} 考试删除, 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          return deleteTest(test.id)
+          return deleteExam(exam.id)
         }).then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
         })
       },
-      showTestEndComponent(test) {
-        if (test.status === 'end') {
+      showExamEndComponent(exam) {
+        if (exam.status === 'end') {
           return false
         }
-        this.testEndBindTest = test
-        this.testEndBindStatus = true
+        this.examEndBindExam = exam
+        this.examEndBindStatus = true
       },
-      testEnded() {
-        this.testEndBindStatus = false
+      examEnded() {
+        this.examEndBindStatus = false
         this.$notify.success({ title: '成功', message: '班级结考成功，未答题学员将无法参加考试' })
       }
     }

@@ -1,22 +1,22 @@
 import request from '@/utils/request'
 
-export function getGradeDistribution(testId, classroomId) {
+export function getGradeDistribution(examId, classroomId) {
   return request({
     url: '/stat/grade-distribution',
     method: 'get',
     params: {
-      test_id: testId,
+      exam_id: examId,
       classroomId: classroomId
     }
   })
 }
 
-export function getErrorQuestion(testId, classroomId) {
+export function getErrorQuestion(examId, classroomId) {
   return request({
     url: '/stat/error-question',
     method: 'get',
     params: {
-      test_id: testId,
+      exam_id: examId,
       classroomId: classroomId
     }
   })

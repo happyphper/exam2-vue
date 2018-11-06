@@ -78,12 +78,12 @@
 </template>
 
 <script>
-  import { storeTest } from '@/api/tests'
+  import { storeExam } from '@/api/exams'
   import { getCourses } from '@/api/courses'
   import { getClassrooms } from '@/api/classrooms'
   
   export default {
-    name: 'TestCreate',
+    name: 'ExamCreate',
     created() {},
     data() {
       return {
@@ -120,7 +120,7 @@
       },
       onSubmit() {
         this.loading = true
-        storeTest(this.form).then(response => {
+        storeExam(this.form).then(response => {
           this.$emit('created', response)
         }).finally(() => {
           this.loading = false

@@ -3,18 +3,18 @@
     <el-row :gutter="50">
       <el-col :span="12">
         <el-card>
-          <ErrorQuestion :classroomId="classroomId" :testId="testId"></ErrorQuestion>
+          <ErrorQuestion :classroomId="classroomId" :examId="examId"></ErrorQuestion>
         </el-card>
       </el-col>
       
       <el-col :span="12">
         <el-card>
-          <GradeDistribution :classroomId="classroomId" :testId="testId"></GradeDistribution>
+          <GradeDistribution :classroomId="classroomId" :examId="examId"></GradeDistribution>
         </el-card>
       </el-col>
     </el-row>
     
-    <TestResultTable :classroomId="classroomId" :testId="testId"></TestResultTable>
+    <ExamResultTable :classroomId="classroomId" :examId="examId"></ExamResultTable>
   </div>
 </template>
 
@@ -22,21 +22,21 @@
   import GradeDistribution from './components/GradeDistribution'
   import ErrorQuestion from './components/ErrorQuestion'
   
-  import TestResultTable from './components/ResultTable'
+  import ExamResultTable from './components/ResultTable'
   
   export default {
-    name: 'testResults',
+    name: 'examResults',
     components: {
       GradeDistribution,
       ErrorQuestion,
-      TestResultTable
+      ExamResultTable
     },
     computed: {
       classroomId() {
         return this.$route.query.classroomId
       },
-      testId() {
-        return this.$route.query.testId
+      examId() {
+        return this.$route.query.examId
       }
     }
   }

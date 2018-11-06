@@ -13,7 +13,7 @@
       <el-col :span="12">
         <el-form-item label="考试班级" prop="classrooms">
           <el-checkbox-group v-model="form.classroom_ids">
-            <el-checkbox v-for="classroom in test.classrooms.data" :label="classroom.id" :key="classroom.id">{{classroom.title}}</el-checkbox>
+            <el-checkbox v-for="classroom in exam.classrooms.data" :label="classroom.id" :key="classroom.id">{{classroom.title}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
       </el-col>
@@ -27,10 +27,10 @@
 </template>
 
 <script>
-  import { endTest } from '@/api/tests'
+  import { endExam } from '@/api/exams'
   
   export default {
-    name: 'TestEnd',
+    name: 'ExamEnd',
     created() {},
     data() {
       return {
@@ -40,11 +40,11 @@
         loading: false
       }
     },
-    props: ['test'],
+    props: ['exam'],
     methods: {
       onSubmit() {
         this.loading = true
-        endTest(this.test.id, this.form).then(response => {
+        endExam(this.exam.id, this.form).then(response => {
           this.$emit('ended', response)
         }).finally(() => {
           this.loading = false

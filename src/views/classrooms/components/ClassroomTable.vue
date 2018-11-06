@@ -7,7 +7,7 @@
         </el-col>
         <el-col :span="8" :offset="2">
           <el-button icon="el-icon-search" circle @click="handleSearch"></el-button>
-          <el-button type="success" icon="el-icon-plus" @click="showGroupCreateComponent" circle></el-button>
+          <el-button type="success" icon="el-icon-plus" @click="showClassroomCreateComponent" circle></el-button>
         </el-col>
       </el-row>
     </div>
@@ -15,7 +15,7 @@
     <el-table :data="tableData" border style="width: 100%" @sort-change="handleSortChange" v-loading="loading">
       <el-table-column
         label="班级名称"
-        prop="name">
+        prop="title">
       </el-table-column>
       <el-table-column
         prop="users_count"
@@ -25,10 +25,10 @@
         label="操作">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-            <el-button @click="showGroupEditComponent(scope.row, scope.$index)" icon="el-icon-edit" size="small"></el-button>
+            <el-button @click="showClassroomEditComponent(scope.row, scope.$index)" icon="el-icon-edit" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除" placement="top">
-            <el-button @click="handleDeleteGroup(scope.row, scope.$index)" icon="el-icon-delete" size="small"></el-button>
+            <el-button @click="handleDeleteClassroom(scope.row, scope.$index)" icon="el-icon-delete" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="成员" placement="top">
             <el-button @click="showUserTableComponent(scope.row)" icon="el-icon-more" size="small"></el-button>
@@ -40,7 +40,7 @@
             <el-button @click="showUserCreateComponent(scope.row)" icon="el-icon-plus" size="small"></el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="查看附属考试" placement="top">
-            <router-link :to="{ name: 'testIndex', query: { groupName: scope.row.name }}">
+            <router-link :to="{ name: 'testIndex', query: { classroomName: scope.row.name }}">
               <el-button size="small">
                 <svg-icon icon-class="test" />
               </el-button>
@@ -62,54 +62,54 @@
       </el-pagination>
     </div>
     <!--Modal-->
-    <el-dialog title="提示" :visible.sync="groupCreateStatus" width="50%">
-      <GroupCreate @created="groupCreated" :key="Date.now()"></GroupCreate>
+    <el-dialog title="提示" :visible.sync="classroomCreateStatus" width="50%">
+      <ClassroomCreate @created="classroomCreated" :key="Date.now()"></ClassroomCreate>
     </el-dialog>
     <!--Modal-->
-    <el-dialog title="提示" :visible.sync="groupEditStatus" width="50%">
-      <GroupEdit :group="groupEditBindGroup" @updated="groupUpdated" :key="Date.now()"></GroupEdit>
+    <el-dialog title="提示" :visible.sync="classroomEditStatus" width="50%">
+      <ClassroomEdit :classroom="classroomEditBindClassroom" @updated="classroomUpdated" :key="Date.now()"></ClassroomEdit>
     </el-dialog>
     <!--Modal-->
     <el-dialog title="提示" :visible.sync="userCreateStatus" width="50%">
-      <UserCreate :group="userCreateBindGroup" @created="userCreated" :key="Date.now()"></UserCreate>
+      <UserCreate :classroom="userCreateBindClassroom" @created="userCreated" :key="Date.now()"></UserCreate>
     </el-dialog>
     <!--Modal-->
     <el-dialog title="提示" :visible.sync="userTableStatus" width="90%">
-      <UserTable :group="userTableBindGroup" @deleted="userDeleted" :key="Date.now()"></UserTable>
+      <UserTable :classroom="userTableBindClassroom" @deleted="userDeleted" :key="Date.now()"></UserTable>
     </el-dialog>
     <!--Modal-->
     <el-dialog title="导入示例" :visible.sync="uploadExcelStatus" width="90%">
-      <UploadExcel :onSuccess="excelUploaded" :exampleHeaders="groupImportExampleHeaders" :exampleData="groupImportExampleData"></UploadExcel>
+      <UploadExcel :onSuccess="excelUploaded" :exampleHeaders="classroomImportExampleHeaders" :exampleData="classroomImportExampleData"></UploadExcel>
     </el-dialog>
     <!--Modal-->
-    <el-dialog title="提示" :visible.sync="groupImportStatus" width="90%">
-      <GroupImport :group="groupImportBindGroup" @created="importCreated" :data="groupImportBindData" :headers="groupImportBindHeaders"></GroupImport>
+    <el-dialog title="提示" :visible.sync="classroomImportStatus" width="90%">
+      <ClassroomImport :classroom="classroomImportBindClassroom" @created="importCreated" :data="classroomImportBindData" :headers="classroomImportBindHeaders"></ClassroomImport>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import { getGroups, deleteGroup } from '@/api/groups'
+  import { getClassrooms, deleteClassroom } from '@/api/classrooms'
   
   import UserCreate from '../../users/components/UserCreate'
   import UserTable from '../../users/components/UserTable'
-  import GroupCreate from './GroupCreate'
-  import GroupEdit from './GroupEdit'
+  import ClassroomCreate from './ClassroomCreate'
+  import ClassroomEdit from './ClassroomEdit'
   import UploadExcel from '@/components/UploadExcel'
-  import GroupImport from './UserImport'
+  import ClassroomImport from './UserImport'
   
   export default {
-    name: 'GroupTable',
+    name: 'ClassroomTable',
     components: {
       UserCreate,
       UserTable,
-      GroupCreate,
-      GroupEdit,
+      ClassroomCreate,
+      ClassroomEdit,
       UploadExcel,
-      GroupImport
+      ClassroomImport
     },
     created() {
-      this.fetchGroups()
+      this.fetchClassrooms()
     },
     data() {
       return {
@@ -122,35 +122,35 @@
           order: 'desc'
         },
         query: {
-          name: ''
+          title: ''
         },
         loading: false,
         userCreateStatus: false,
-        userCreateBindGroup: null,
+        userCreateBindClassroom: null,
         userTableStatus: false,
-        userTableBindGroup: null,
-        groupCreateStatus: false,
-        groupEditStatus: false,
-        groupEditBindGroup: null,
-        groupEditIndex: null,
+        userTableBindClassroom: null,
+        classroomCreateStatus: false,
+        classroomEditStatus: false,
+        classroomEditBindClassroom: null,
+        classroomEditIndex: null,
         uploadExcelStatus: false,
-        groupImportBindGroup: null,
-        groupImportBindHeaders: [],
-        groupImportBindData: [],
-        groupImportStatus: false,
-        groupImportExampleHeaders: ['name', 'email', 'student_id', 'phone', 'password'],
-        groupImportExampleData: [{ name: '姓名（必填）', student_id: '学号（必填）', email: '邮箱（选填）', phone: '手机（选填）', password: '密码（选填）' }]
+        classroomImportBindClassroom: null,
+        classroomImportBindHeaders: [],
+        classroomImportBindData: [],
+        classroomImportStatus: false,
+        classroomImportExampleHeaders: ['name', 'email', 'student_id', 'phone', 'password'],
+        classroomImportExampleData: [{ name: '姓名（必填）', student_id: '学号（必填）', email: '邮箱（选填）', phone: '手机（选填）', password: '密码（选填）' }]
       }
     },
     methods: {
-      fetchGroups() {
+      fetchClassrooms() {
         const queryString = {}
         this.query.name && (queryString['name'] = `%${this.query.name}%`)
         queryString.sort = `${this.sort.prop},${this.order}`
         queryString.page = this.currentPage
         queryString.per_page = this.perPage
         this.loading = true
-        getGroups(queryString).then(response => {
+        getClassrooms(queryString).then(response => {
           this.tableData = response.data
           this.currentPage = response.meta.pagination.current_page
           this.perPage = response.meta.pagination.per_page
@@ -160,7 +160,7 @@
         })
       },
       handleSearch() {
-        this.fetchGroups()
+        this.fetchClassrooms()
       },
       handleSizeChange(pageNumber) {
         this.perPage = pageNumber
@@ -171,59 +171,59 @@
       handleSortChange({ column, prop, order }) {
         this.sort = { prop, order }
       },
-      showGroupCreateComponent() {
-        this.groupCreateStatus = true
+      showClassroomCreateComponent() {
+        this.classroomCreateStatus = true
       },
-      groupCreated(group) {
-        this.groupCreateStatus = false
-        this.tableData.push(group)
+      classroomCreated(classroom) {
+        this.classroomCreateStatus = false
+        this.tableData.push(classroom)
       },
-      showGroupEditComponent(group, index) {
-        this.groupEditBindGroup = group
-        this.groupEditIndex = index
-        this.groupEditStatus = true
+      showClassroomEditComponent(classroom, index) {
+        this.classroomEditBindClassroom = classroom
+        this.classroomEditIndex = index
+        this.classroomEditStatus = true
       },
-      groupUpdated(response) {
-        this.tableData.splice(this.groupEditIndex, 1, response)
-        this.groupEditStatus = false
+      classroomUpdated(response) {
+        this.tableData.splice(this.classroomEditIndex, 1, response)
+        this.classroomEditStatus = false
       },
-      handleDeleteGroup(group, index) {
+      handleDeleteClassroom(classroom, index) {
         this.$confirm('将永久删除该群组，并删除该群组下所有学员，是否继续？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
         }).then(() => {
-          return deleteGroup(group.id)
+          return deleteClassroom(classroom.id)
         }).then(() => {
           this.$message.success('删除成功')
           this.tableData.splice(index, 1)
         })
       },
-      showUserCreateComponent(group) {
-        this.userCreateBindGroup = group
+      showUserCreateComponent(classroom) {
+        this.userCreateBindClassroom = classroom
         this.userCreateStatus = !this.userCreateStatus
       },
       userCreated() {
         this.userCreateStatus = false
-        this.userCreateBindGroup.users_count++
+        this.userCreateBindClassroom.users_count++
       },
-      showUserTableComponent(group) {
+      showUserTableComponent(classroom) {
         this.userTableStatus = true
-        this.userTableBindGroup = group
+        this.userTableBindClassroom = classroom
       },
       userDeleted() {},
-      showUploadExcelComponent(group) {
-        this.groupImportBindGroup = group
+      showUploadExcelComponent(classroom) {
+        this.classroomImportBindClassroom = classroom
         this.uploadExcelStatus = true
       },
       excelUploaded(excelData) {
-        this.groupImportBindHeaders = excelData.header
-        this.groupImportBindData = excelData.results
+        this.classroomImportBindHeaders = excelData.header
+        this.classroomImportBindData = excelData.results
         this.uploadExcelStatus = false
-        this.groupImportStatus = true
+        this.classroomImportStatus = true
       },
       importCreated(count) {
-        this.groupImportStatus = false
-        this.groupImportBindGroup.users_count += count
+        this.classroomImportStatus = false
+        this.classroomImportBindClassroom.users_count += count
       }
     }
   }

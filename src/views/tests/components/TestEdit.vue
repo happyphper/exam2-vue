@@ -32,22 +32,22 @@
     
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="考试班级" prop="groups">
+        <el-form-item label="考试班级" prop="classrooms">
           <el-select
-            v-model="form.group_ids"
+            v-model="form.classroom_ids"
             multiple
             collapse-tags
             filterable
             remote
             reserve-keyword
-            :remote-method="fetchGroups"
-            :loading="groupSelectListLoading"
+            :remote-method="fetchClassrooms"
+            :loading="classroomSelectListLoading"
             placeholder="请输入关键字">
             <el-option
-              v-for="group in groupSelectList"
-              :key="group.id"
-              :label="group.name"
-              :value="group.id">
+              v-for="classroom in classroomSelectList"
+              :key="classroom.id"
+              :label="classroom.name"
+              :value="classroom.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -79,7 +79,7 @@
 
 <script>
   import { updateTest } from '@/api/tests'
-  import { getGroups } from '@/api/groups'
+  import { getClassrooms } from '@/api/classrooms'
   import { getCourses } from '@/api/courses'
   
   export default {
@@ -89,8 +89,8 @@
       this.form.type = this.test.type
       this.form.started_at = this.test.started_at
       this.form.ended_at = this.test.ended_at
-      this.groupSelectList = this.test.groups.data
-      this.test.groups.data.forEach(item => this.form.group_ids.push(item.id))
+      this.classroomSelectList = this.test.classrooms.data
+      this.test.classrooms.data.forEach(item => this.form.classroom_ids.push(item.id))
   
       this.courseSelectList.push(this.test.course)
       this.form.course_id = this.test.course.id
@@ -103,22 +103,22 @@
           started_at: '',
           ended_at: '',
           course_id: null,
-          group_ids: []
+          classroom_ids: []
         },
         loading: false,
-        groupSelectListLoading: false,
-        groupSelectList: [],
+        classroomSelectListLoading: false,
+        classroomSelectList: [],
         courseSelectListLoading: false,
         courseSelectList: []
       }
     },
     methods: {
-      fetchGroups(query) {
-        this.groupSelectListLoading = true
-        getGroups({ name: `%${query}%`, per_page: 100 }).then(response => {
-          this.groupSelectList = response.data
+      fetchClassrooms(query) {
+        this.classroomSelectListLoading = true
+        getClassrooms({ name: `%${query}%`, per_page: 100 }).then(response => {
+          this.classroomSelectList = response.data
         }).finally(() => {
-          this.groupSelectListLoading = false
+          this.classroomSelectListLoading = false
         })
       },
       fetchCourses(query) {

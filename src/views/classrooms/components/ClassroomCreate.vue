@@ -4,13 +4,13 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="班级名称" prop="name">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.title"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      
+    
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即更新</el-button>
+        <el-button type="primary" @click="onSubmit">立即创建</el-button>
         <el-button @click="resetForm('form')">重置表单</el-button>
       </el-form-item>
     </el-form>
@@ -18,18 +18,14 @@
 </template>
 
 <script>
-  import { updateGroup } from '@/api/groups'
+  import { storeClassroom } from '@/api/classrooms'
   
   export default {
-    name: 'GroupEdit',
-    props: ['group'],
-    created() {
-      this.form.name = this.group.name
-    },
+    name: 'ClassroomCreate',
     data() {
       return {
         form: {
-          name: ''
+          title: ''
         },
         loading: false
       }
@@ -37,9 +33,9 @@
     methods: {
       onSubmit() {
         this.loading = true
-        updateGroup(this.group.id, this.form).then(response => {
-          this.$message.success('更新成功')
-          this.$emit('updated', response)
+        storeClassroom(this.form).then(response => {
+          this.$message.success('创建成功')
+          this.$emit('created', response)
           this.resetForm('form')
         }).finally(() => {
           this.loading = false

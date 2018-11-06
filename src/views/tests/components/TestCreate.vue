@@ -32,22 +32,22 @@
     
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="考试班级" prop="groups">
+        <el-form-item label="考试班级" prop="classrooms">
           <el-select
-            v-model="form.group_ids"
+            v-model="form.classroom_ids"
             multiple
             collapse-tags
             filterable
             remote
             reserve-keyword
-            :remote-method="fetchGroups"
-            :loading="groupSelectListLoading"
+            :remote-method="fetchClassrooms"
+            :loading="classroomSelectListLoading"
             placeholder="请输入关键字">
             <el-option
-              v-for="group in groupSelectList"
-              :key="group.id"
-              :label="group.name"
-              :value="group.id">
+              v-for="classroom in classroomSelectList"
+              :key="classroom.id"
+              :label="classroom.title"
+              :value="classroom.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -80,7 +80,7 @@
 <script>
   import { storeTest } from '@/api/tests'
   import { getCourses } from '@/api/courses'
-  import { getGroups } from '@/api/groups'
+  import { getClassrooms } from '@/api/classrooms'
   
   export default {
     name: 'TestCreate',
@@ -91,23 +91,23 @@
           title: '',
           started_at: '',
           ended_at: '',
-          group_ids: [],
+          classroom_ids: [],
           course_id: null
         },
         loading: false,
-        groupSelectListLoading: false,
-        groupSelectList: [],
+        classroomSelectListLoading: false,
+        classroomSelectList: [],
         courseSelectListLoading: false,
         courseSelectList: []
       }
     },
     methods: {
-      fetchGroups(query) {
-        this.groupSelectListLoading = true
-        getGroups({ name: `%${query}%`, per_page: 100 }).then(response => {
-          this.groupSelectList = response.data
+      fetchClassrooms(query) {
+        this.classroomSelectListLoading = true
+        getClassrooms({ name: `%${query}%`, per_page: 100 }).then(response => {
+          this.classroomSelectList = response.data
         }).finally(() => {
-          this.groupSelectListLoading = false
+          this.classroomSelectListLoading = false
         })
       },
       fetchCourses(query) {

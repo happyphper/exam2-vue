@@ -9,7 +9,7 @@
   
   export default {
     name: 'GradeDistribution',
-    props: ['testId', 'groupId'],
+    props: ['testId', 'classroomId'],
     created() {
       this.fetchData()
     },
@@ -24,7 +24,7 @@
     methods: {
       fetchData() {
         this.loading = true
-        getGradeDistribution(this.testId, this.groupId).then(response => {
+        getGradeDistribution(this.testId, this.classroomId).then(response => {
           this.data = response.data
           this.headers = response.meta.headers
           this.values = response.meta.values

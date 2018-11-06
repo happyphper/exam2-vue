@@ -25,7 +25,7 @@
   
   export default {
     name: 'UserImport',
-    props: ['group', 'headers', 'data'],
+    props: ['classroom', 'headers', 'data'],
     created() {
     },
     data() {
@@ -39,7 +39,7 @@
       },
       onSubmit() {
         this.loading = true
-        bulk(this.group.id, this.data).then(() => {
+        bulk(this.classroom.id, this.data).then(() => {
           this.$message.success('添加成功')
           this.$emit('created', this.data.length)
         }).finally(() => {

@@ -40,10 +40,10 @@
     },
     data() {
       return {
-        type: 'group',
+        type: 'classroom',
         treeData: [],
         loading: true,
-        types: { group: '班级分类', question: '题目分类' }
+        types: { classroom: '班级分类', question: '题目分类' }
       }
     },
     computed: {

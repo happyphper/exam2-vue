@@ -8,7 +8,7 @@ export function getTests(params) {
   })
 }
 
-export function storeTest(data, params = { include: 'course,groups' }) {
+export function storeTest(data, params = { include: 'course,classrooms' }) {
   return request({
     url: '/tests',
     method: 'post',
@@ -17,7 +17,7 @@ export function storeTest(data, params = { include: 'course,groups' }) {
   })
 }
 
-export function updateTest(testId, data, params = { include: 'course,groups' }) {
+export function updateTest(testId, data, params = { include: 'course,classrooms' }) {
   return request({
     url: `/tests/${testId}`,
     method: 'put',

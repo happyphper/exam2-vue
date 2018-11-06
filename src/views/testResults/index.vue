@@ -3,18 +3,18 @@
     <el-row :gutter="50">
       <el-col :span="12">
         <el-card>
-          <ErrorQuestion :groupId="groupId" :testId="testId"></ErrorQuestion>
+          <ErrorQuestion :classroomId="classroomId" :testId="testId"></ErrorQuestion>
         </el-card>
       </el-col>
       
       <el-col :span="12">
         <el-card>
-          <GradeDistribution :groupId="groupId" :testId="testId"></GradeDistribution>
+          <GradeDistribution :classroomId="classroomId" :testId="testId"></GradeDistribution>
         </el-card>
       </el-col>
     </el-row>
     
-    <TestResultTable :groupId="groupId" :testId="testId"></TestResultTable>
+    <TestResultTable :classroomId="classroomId" :testId="testId"></TestResultTable>
   </div>
 </template>
 
@@ -32,8 +32,8 @@
       TestResultTable
     },
     computed: {
-      groupId() {
-        return this.$route.query.groupId
+      classroomId() {
+        return this.$route.query.classroomId
       },
       testId() {
         return this.$route.query.testId

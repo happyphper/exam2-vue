@@ -98,13 +98,13 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/groups',
+    path: '/classrooms',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'groupIndex',
-        component: () => import('@/views/groups/index'),
+        name: 'classroomIndex',
+        component: () => import('@/views/classrooms/index'),
         meta: { title: '班级管理', icon: 'form' }
       }
     ]

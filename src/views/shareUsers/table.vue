@@ -33,7 +33,7 @@
     created() {
       this.fetchShareUsers()
     },
-    props: ['group'],
+    props: ['classroom'],
     data() {
       return {
         tableData: [],

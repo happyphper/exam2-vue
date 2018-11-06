@@ -14,7 +14,7 @@
           </el-input>
         </el-col>
         <el-col :span="12">
-          <el-input placeholder="请输入群组名称" v-model="groupsName" :disabled="disableGroupSearch">
+          <el-input placeholder="请输入群组名称" v-model="classroomsName" :disabled="disableClassroomSearch">
             <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
           </el-input>
         </el-col>
@@ -52,7 +52,7 @@
         sortable="custom">
       </el-table-column>
       <el-table-column
-        prop="group.name"
+        prop="classroom.name"
         label="群组">
       </el-table-column>
       <el-table-column label="操作">
@@ -79,7 +79,7 @@
     </div>
     <!--UserCreate-->
     <el-dialog title="提示" :visible.sync="userCreateStatus" width="50%" append-to-body>
-      <UserCreate :group="userCreateBindGroup" @created="userCreated" :key="Date.now()"></UserCreate>
+      <UserCreate :classroom="userCreateBindClassroom" @created="userCreated" :key="Date.now()"></UserCreate>
     </el-dialog>
     <!--UserEdit-->
     <el-dialog title="提示" :visible.sync="userEditStatus" width="50%" append-to-body>
@@ -96,8 +96,8 @@
   export default {
     name: 'UserTable',
     created() {
-      if (this.group) {
-        this.disableGroupSearch = true
+      if (this.classroom) {
+        this.disableClassroomSearch = true
       }
       this.fetchUsers()
     },
@@ -105,7 +105,7 @@
       UserCreate,
       UserEdit
     },
-    props: ['group'],
+    props: ['classroom'],
     data() {
       return {
         tableData: [],
@@ -121,23 +121,23 @@
           value: null
         },
         include: null,
-        groupsName: null,
-        groupsId: null,
+        classroomsName: null,
+        classroomsId: null,
         loading: false,
         userCreateStatus: false,
-        userCreateBindGroup: null,
+        userCreateBindClassroom: null,
         userEditStatus: false,
         userEditBindUser: null,
         userEditIndex: null,
-        disableGroupSearch: false
+        disableClassroomSearch: false
       }
     },
     methods: {
       fetchUsers() {
         const queryString = {}
         this.query.value && (queryString[this.query.label] = `%${this.query.value}%`)
-        this.groupsName && (queryString['groups:name'] = `%${this.groupsName}%`)
-        this.group && (queryString['group:id'] = this.group.id)
+        this.classroomsName && (queryString['classrooms:name'] = `%${this.classroomsName}%`)
+        this.classroom && (queryString['classroom:id'] = this.classroom.id)
         queryString.include = this.include
         queryString.sort = `${this.sort.prop},${this.order}`
         queryString.page = this.currentPage
@@ -176,7 +176,7 @@
           return deleteUser(user.id)
         }).then(() => {
           this.$message.success('删除成功')
-          this.group && this.group.users_count--
+          this.classroom && this.classroom.users_count--
           this.tableData.splice(index, 1)
         })
       },

@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
-    <GroupTable></GroupTable>
+    <ClassroomTable></ClassroomTable>
   </div>
 </template>
 
 <script>
-  import GroupTable from './components/GroupTable'
+  import ClassroomTable from './components/ClassroomTable'
 
   export default {
-    name: 'groups',
+    name: 'classrooms',
     components: {
-      GroupTable
+      ClassroomTable
     },
     data() {
       return {}

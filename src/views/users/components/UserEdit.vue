@@ -19,8 +19,8 @@
     
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="班级" prop="group_id">
-            <el-tag :key="user.group.id" style="margin-right: 0.5rem;">{{ user.group.name }}</el-tag>
+          <el-form-item label="班级" prop="classroom_id">
+            <el-tag :key="user.classroom.id" style="margin-right: 0.5rem;">{{ user.classroom.title }}</el-tag>
           </el-form-item>
         </el-col>
       </el-row>

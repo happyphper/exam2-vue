@@ -15,7 +15,7 @@
         </router-link>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <router-link :to="{ name: 'groupIndex' }">
+        <router-link :to="{ name: 'classroomIndex' }">
           <div class="card-panel">
             <div class="card-panel-icon-wrapper icon-people">
               <svg-icon icon-class="classroom" class-name="card-panel-icon"/>

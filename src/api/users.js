@@ -31,12 +31,12 @@ export function deleteUser(userId) {
   })
 }
 
-export function bulk(groupId, data) {
+export function bulk(classroomId, data) {
   return request({
     url: `/bulk-import-users`,
     method: 'post',
     data: {
-      group_id: groupId,
+      classroom_id: classroomId,
       users: data
     }
   })

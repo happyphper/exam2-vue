@@ -17,17 +17,17 @@
         </el-col>
         <el-col :span="6">
           <el-select
-            v-model="query.group_id"
+            v-model="query.classroom_id"
             filterable
             remote
             reserve-keyword
             placeholder="请输入班级关键词"
-            :remote-method="fetchGroups"
-            :loading="selectGroupLoading">
+            :remote-method="fetchClassrooms"
+            :loading="selectClassroomLoading">
             <el-option
-              v-for="item in selectGroupList"
+              v-for="item in selectClassroomList"
               :key="item.id"
-              :label="item.name"
+              :label="item.title"
               :value="item.id">
             </el-option>
           </el-select>
@@ -50,7 +50,7 @@
     
     <el-table :data="tableData" border style="width: 100%" v-loading="loading" :row-key="handleCurrentRow">
       <el-table-column label="姓名" prop="name"></el-table-column>
-      <el-table-column label="班级" prop="group"></el-table-column>
+      <el-table-column label="班级" prop="classroom"></el-table-column>
       <el-table-column label="课程" prop="course"></el-table-column>
       <el-table-column v-for="test in currentRow.tests" :key="test.id" :label="test.title">
         <template slot-scope="scope">{{ test.score }}</template>
@@ -63,22 +63,22 @@
 <script>
   import { getUserGradeData } from '@/api/statistics'
   import { getCourses } from '@/api/courses'
-  import { getGroups } from '@/api/groups'
+  import { getClassrooms } from '@/api/classrooms'
   
   export default {
     name: 'UserGradeTable',
-    props: ['courseId', 'groupId', 'createdAt'],
+    props: ['courseId', 'classroomId', 'createdAt'],
     data() {
       return {
         tableData: [],
         loading: false,
-        selectGroupList: [],
-        selectGroupLoading: false,
+        selectClassroomList: [],
+        selectClassroomLoading: false,
         selectCourseList: [],
         selectCourseLoading: false,
         query: {
           course_id: null,
-          group_id: null,
+          classroom_id: null,
           created_at: []
         },
         currentRow: 0,
@@ -89,7 +89,7 @@
       fetchUserGrade() {
         const queryString = {}
         this.courseId && (queryString['course_id'] = this.courseId)
-        this.groupId && (queryString['course_id'] = this.courseId)
+        this.classroomId && (queryString['course_id'] = this.courseId)
         this.createdAt && (queryString['created_at'] = this.createdAt)
         this.loading = true
         getUserGradeData(queryString).then(response => {
@@ -106,12 +106,12 @@
           this.selectCourseLoading = false
         })
       },
-      fetchGroups(query) {
-        this.selectGroupLoading = true
-        getGroups({ title: `%${query}%` }).then(response => {
-          this.selectGroupList = response.data
+      fetchClassrooms(query) {
+        this.selectClassroomLoading = true
+        getClassrooms({ title: `%${query}%` }).then(response => {
+          this.selectClassroomList = response.data
         }).finally(() => {
-          this.selectGroupLoading = false
+          this.selectClassroomLoading = false
         })
       },
       handleSearch() {
@@ -152,7 +152,7 @@
         return headers
       },
       formatFiedls(data) {
-        const fields = ['name', 'course', 'group']
+        const fields = ['name', 'course', 'classroom']
         data.map(item => {
           item.tests.forEach(test => {
             fields.push(test.id)

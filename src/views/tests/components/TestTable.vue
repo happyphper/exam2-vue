@@ -9,7 +9,7 @@
           <el-input placeholder="请输入课程关键字" v-model="query.courseTitle"></el-input>
         </el-col>
         <el-col :span="6">
-          <el-input placeholder="请输入班级关键字" v-model="query.groupName"></el-input>
+          <el-input placeholder="请输入班级关键字" v-model="query.classroomName"></el-input>
         </el-col>
         <el-col :span="6">
           <el-button icon="el-icon-search" circle @click="handleSearch"></el-button>
@@ -29,8 +29,8 @@
       </el-table-column>
       <el-table-column label="关联班级">
         <template slot-scope="scope">
-          <el-button size="small" v-for="group in scope.row.groups.data" :key="group.id">
-            <router-link :to="{ name: 'testResultIndex', query: { testId: scope.row.id, groupId: group.id }}">{{ group.name }}</router-link>
+          <el-button size="small" v-for="classroom in scope.row.classrooms.data" :key="classroom.id">
+            <router-link :to="{ name: 'testResultIndex', query: { testId: scope.row.id, classroomId: classroom.id }}">{{ classroom.title }}</router-link>
           </el-button>
         </template>
       </el-table-column>
@@ -118,7 +118,7 @@
     },
     created() {
       this.$route.query.courseTitle && (this.query.courseTitle = this.$route.query.courseTitle)
-      this.$route.query.groupName && (this.query.groupName = this.$route.query.groupName)
+      this.$route.query.classroomName && (this.query.classroomName = this.$route.query.classroomName)
       this.fetchTests()
     },
     data() {
@@ -134,9 +134,9 @@
         query: {
           title: null,
           courseTitle: null,
-          groupName: null
+          classroomName: null
         },
-        include: 'groups,course',
+        include: 'classrooms,course',
         loading: false,
         testCreateStatus: false,
         testEditStatus: false,
@@ -151,7 +151,7 @@
         const queryString = {}
         this.query.title && (queryString['title'] = `%${this.query.title}%`)
         this.query.courseTitle && (queryString['course:title'] = `%${this.query.courseTitle}%`)
-        this.query.groupName && (queryString['groups:name'] = `%${this.query.groupName}%`)
+        this.query.classroomName && (queryString['classrooms:name'] = `%${this.query.classroomName}%`)
         queryString.include = this.include
         queryString.sort = `${this.sort.prop},${this.sort.order}`
         queryString.page = this.currentPage

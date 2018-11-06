@@ -110,7 +110,7 @@
         include: null,
         loading: false,
         teacherCreateStatus: false,
-        teacherCreateBindGroup: null,
+        teacherCreateBindClassroom: null,
         teacherEditStatus: false,
         teacherEditBindTeacher: null,
         teacherEditIndex: null

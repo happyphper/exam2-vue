@@ -35,8 +35,8 @@
   
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="班级" prop="group_id">
-            <span>{{ group.name }}</span>
+          <el-form-item label="班级" prop="classroom_id">
+            <span>{{ classroom.title }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -55,15 +55,15 @@
   export default {
     name: 'UserCreate',
     created() {
-      this.form.group_id = this.group.id
+      this.form.classroom_id = this.classroom.id
     },
-    props: ['group'],
+    props: ['classroom'],
     data() {
       return {
         form: {
           name: null,
           email: null,
-          group_id: null,
+          classroom_id: null,
           student_id: null,
           phone: null
         },

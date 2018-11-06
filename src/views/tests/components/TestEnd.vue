@@ -11,9 +11,9 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="考试班级" prop="groups">
-          <el-checkbox-group v-model="form.group_ids">
-            <el-checkbox v-for="group in test.groups.data" :label="group.id" :key="group.id">{{group.name}}</el-checkbox>
+        <el-form-item label="考试班级" prop="classrooms">
+          <el-checkbox-group v-model="form.classroom_ids">
+            <el-checkbox v-for="classroom in test.classrooms.data" :label="classroom.id" :key="classroom.id">{{classroom.title}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
       </el-col>
@@ -35,7 +35,7 @@
     data() {
       return {
         form: {
-          group_ids: []
+          classroom_ids: []
         },
         loading: false
       }

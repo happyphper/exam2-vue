@@ -130,7 +130,7 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: 'shareUserIndex',
-        component: () => import('@/views/shareUsers/index'),
+        component: () => import('@/views/shares/index'),
         meta: { title: '共享管理', icon: 'form' }
       }
     ]

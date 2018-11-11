@@ -84,13 +84,14 @@
               <el-button @click.prevent="toggleAnswer(option)" :icon="option.right ? 'el-icon-close' : 'el-icon-check'"
                          :type="option.right ? 'danger' : 'success'" circle></el-button>
             </el-tooltip>
+            <el-button @click.prevent="removeOption(option, index)" type="danger">去除选项</el-button>
           </el-col>
         </el-form-item>
       </el-row>
       
       <el-form-item>
+        <el-button @click.prevent="addOption()" type="success">新增选项</el-button>
         <el-button type="primary" @click="onSubmit">立即创建</el-button>
-        <el-button>取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -116,6 +117,7 @@
           course_id: null,
           title: '',
           type: 'single',
+          optionType: 'text',
           chapter: null,
           section: null,
           options: [
@@ -171,6 +173,31 @@
             option.right = true
           }
         }
+      },
+      addOption() {
+        let maxId = 0
+        if (this.form.options.length === 0) {
+          maxId = 0
+        } else {
+          const maxItem = this.form.options.reduce((prev, current) => {
+            return prev.id > current.id ? prev : current
+          })
+          console.log(maxItem)
+          maxId = maxItem.id
+        }
+        this.form.options.push({
+          id: maxId + 1,
+          content: '',
+          type: this.optionType,
+          right: false
+        })
+      },
+      removeOption(option, index) {
+        const answerIndex = this.form.answer.findIndex(item => item === option.id)
+        if (answerIndex >= 0) {
+          this.form.answer.splice(answerIndex, 1)
+        }
+        this.form.options.splice(index, 1)
       }
     }
   }

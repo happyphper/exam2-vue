@@ -46,7 +46,7 @@
             <el-option
               v-for="classroom in classroomSelectList"
               :key="classroom.id"
-              :label="classroom.name"
+              :label="classroom.title"
               :value="classroom.id">
             </el-option>
           </el-select>

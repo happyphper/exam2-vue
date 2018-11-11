@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column
         label="班级"
-        prop="classroom.name">
+        prop="classroom.title">
       </el-table-column>
       <el-table-column
         label="学生">
@@ -135,7 +135,7 @@
         this.query.classroomId && (queryString.classroom_id = this.query.classroom_id)
         this.query.examTitle && (queryString['exam:title'] = `%${this.query.examTitle}%`)
         this.query.examTitle && (queryString['exam:title'] = `%${this.query.examTitle}%`)
-        this.query.classroomName && (queryString['classroom:name'] = `%${this.query.classroomName}%`)
+        this.query.classroomName && (queryString['classroom:title'] = `%${this.query.classroomName}%`)
         this.query.userName && (queryString['user:name'] = `%${this.query.userName}%`)
         queryString.include = this.include
         queryString.sort = `${this.sort.prop},${this.sort.order}`

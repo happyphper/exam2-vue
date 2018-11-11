@@ -55,7 +55,7 @@ service.interceptors.response.use(
     }
     Notification({
       title: '错误',
-      message: error.response.data.message,
+      message: error.response.data.message ? error.response.data.message : error.response.message,
       type: 'error',
       duration: 3000
     })

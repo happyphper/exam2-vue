@@ -239,7 +239,6 @@
           const maxItem = this.form.options.reduce((prev, current) => {
             return prev.id > current.id ? prev : current
           })
-          console.log(maxItem)
           maxId = maxItem.id
         }
         this.form.options.push({

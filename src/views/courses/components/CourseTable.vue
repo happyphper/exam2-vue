@@ -153,7 +153,7 @@
         questionImportBindHeaders: null,
         questionImportBindData: null,
         questionImportStatus: null,
-        questionImportExampleHeaders: ['title', 'type', 'chapter', 'section', 'option1', 'option2', 'option3', 'option4', 'answer', 'explain'],
+        questionImportExampleHeaders: ['title', 'type', 'chapter', 'section', 'option1', 'option2', 'option3', 'option4', 'optionN', 'answer', 'explain'],
         questionImportExampleData: [
           {
             title: '题干',
@@ -164,6 +164,7 @@
             option2: '选项2',
             option3: '选项3',
             option4: '选项4',
+            optionN: '选项N',
             answer: '正确答案，如:[1]、[1,2]',
             explain: '答案解析（选填）'
           },
@@ -176,6 +177,7 @@
             option2: '2',
             option3: '3',
             option4: '4',
+            optionN: '选项个数：2-10',
             answer: '[2]',
             explain: '1+1=2为正解'
           }

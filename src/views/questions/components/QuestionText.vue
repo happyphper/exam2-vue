@@ -175,6 +175,10 @@
         }
       },
       addOption() {
+        if (this.form.options.length >= 10) {
+          this.$message.warning('题目选项至多有 10 个')
+          return false
+        }
         let maxId = 0
         if (this.form.options.length === 0) {
           maxId = 0
@@ -193,6 +197,10 @@
         })
       },
       removeOption(option, index) {
+        if (this.form.options.length <= 2) {
+          this.$message.warning('题目选项至少有 2 个')
+          return false
+        }
         const answerIndex = this.form.answer.findIndex(item => item === option.id)
         if (answerIndex >= 0) {
           this.form.answer.splice(answerIndex, 1)

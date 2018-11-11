@@ -90,7 +90,7 @@
       <CourseEdit :course="courseEditBindCourse" @updated="courseUpdated" :key="Date.now()"></CourseEdit>
     </el-dialog>
     <!--QuestionCreateModal-->
-    <el-dialog title="提示" :visible.sync="questionCreateStatus" width="50%">
+    <el-dialog title="提示" :visible.sync="questionCreateStatus" :fullscreen="true">
       <QuestionCreate :course="questionCreateBindCourse" @created="questionCreated" :key="Date.now()"></QuestionCreate>
     </el-dialog>
     <!--Modal-->

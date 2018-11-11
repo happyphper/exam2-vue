@@ -12,8 +12,8 @@
 </template>
 
 <script>
-  import TextQuestion from './QuestionText'
-  import ImageQuestion from './QuestionImage'
+  import TextQuestion from './CreateText'
+  import ImageQuestion from './CreateImage'
   
   export default {
     name: 'QuestionCreate',

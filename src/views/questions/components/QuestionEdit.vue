@@ -31,6 +31,33 @@
         </el-col>
       </el-row>
       
+      <el-row v-if="form.image">
+        <el-col :span="12">
+          <el-form-item label="题干">
+            <img :src="form.image + '-mini'" alt="重新上传成功，提交后自动替换">
+          </el-form-item>
+        </el-col>
+      </el-row>
+      
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="题干图片">
+            <el-upload
+              :action="uploadDomain"
+              :on-success="handleQuestionUploadSuccess"
+              :before-upload="handleBeforeUpload"
+              :before-remove="handleBeforeRemove"
+              :file-list="uploadedList"
+              :data="uploadData"
+              :on-preview="handlePreview"
+              :disabled="uploading"
+            >
+              <el-button size="small" type="primary" :loading="uploading">重新上传</el-button>
+            </el-upload>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="类型">
@@ -39,7 +66,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-  
+      
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="章">
@@ -47,7 +74,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-  
+      
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="节">
@@ -72,7 +99,7 @@
         </el-col>
       </el-row>
       
-      <el-row :gutter="20" v-for="(option, index) in form.options" :key="index">
+      <el-row :gutter="20" v-for="(option, index) in form.options" :key="option.id" v-if="option.type === 'text'">
         <el-form-item :label="`选项 ${option.id}`">
           <el-input class="hidden" type="hidden" v-model="form.options[index].id" :value="option.id"></el-input>
           <el-col :span="12">
@@ -87,23 +114,61 @@
         </el-form-item>
       </el-row>
       
+      <el-row :gutter="20" v-for="(option, index) in form.options" :key="option.id" v-if="option.type === 'image'">
+        <el-form-item :label="`选项 ${option.id}`">
+          <el-input class="hidden" type="hidden" v-model="form.options[index].id" :value="option.id"></el-input>
+          <el-col :span="24">
+            <img :src="option.content + '-mini'" alt="重新上传成功，提交后自动替换">
+          </el-col>
+          <el-col :span="12">
+            <el-upload
+              :action="uploadDomain"
+              :on-success="handleUploadSuccess"
+              :before-upload="handleBeforeUpload"
+              :before-remove="handleBeforeRemove"
+              :file-list="uploadedList"
+              :data="uploadData"
+              :on-preview="handlePreview"
+              :disabled="uploading"
+            >
+              <el-button size="small" type="primary" @click="handleClick(index)" :loading="uploading">重新上传</el-button>
+            </el-upload>
+          </el-col>
+          <el-col :span="6">
+            <el-tooltip class="item" effect="dark" :content="option.right ? '取消正确答案' : '设置正确答案'" placement="top">
+              <el-button @click.prevent="toggleAnswer(option)" :icon="option.right ? 'el-icon-close' : 'el-icon-check'"
+                         :type="option.right ? 'danger' : 'success'" circle></el-button>
+            </el-tooltip>
+            
+            <el-button @click.prevent="removeOption(option, index)" type="danger">去除选项</el-button>
+          </el-col>
+        </el-form-item>
+      </el-row>
+      
+      
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即更新</el-button>
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
+    
+    <el-dialog title="预览" :visible.sync="previewStatus" append-to-body>
+      <img :src="previewUrl" alt="预览图片" width="300">
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import { updateQuestion } from '@/api/questions'
   import { getCourses } from '@/api/courses'
+  import { getToken, deleteImage } from '@/api/cloudStorage'
   
   export default {
     name: 'QuestionEdit',
     created() {
       this.courseSelectList.push(this.question.course)
       this.form.title = this.question.title
+      this.form.image = this.question.image
       this.form.type = this.question.type
       this.form.chapter = this.question.chapter
       this.form.section = this.question.section
@@ -134,7 +199,17 @@
         },
         loading: false,
         courseSelectList: [],
-        courseSelectListLoading: false
+        courseSelectListLoading: false,
+        uploadDomain: 'http://upload.qiniu.com/',
+        uploadData: {
+          token: '',
+          key: ''
+        },
+        uploadedList: [],
+        uploading: false,
+        previewStatus: false,
+        previewUrl: '',
+        optionIndex: 0
       }
     },
     methods: {
@@ -175,6 +250,40 @@
             option.right = true
           }
         }
+      },
+      handleBeforeUpload() {
+        this.uploading = true
+        return getToken().then(response => {
+          this.uploadData.token = response.token
+          this.uploadData.key = response.name
+        }).catch(err => {
+          console.log(err)
+          return false
+        })
+      },
+      handleBeforeRemove(file, fileList) {
+        this.form.options.forEach(item => {
+          if (item.content === file.response.key) {
+            item.content = null
+          }
+        })
+        deleteImage(file.response.key)
+        return true
+      },
+      handlePreview(file) {
+        this.previewUrl = file.url
+        this.previewStatus = true
+      },
+      handleQuestionUploadSuccess(res) {
+        this.uploading = false
+        this.form.image = res.key
+      },
+      handleUploadSuccess(res) {
+        this.uploading = false
+        this.form.options[this.optionIndex].content = res.key
+      },
+      handleClick(index) {
+        this.optionIndex = index
       }
     }
   }

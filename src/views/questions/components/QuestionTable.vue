@@ -38,7 +38,7 @@
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item :label="`选项 ${option.id}`">
                   <span v-if="option.type === 'text'">{{ option.content }}</span>
-                  <img :src="option.content" width="100" v-else/>
+                  <img :src="option.content + '-mini'" alt="选项" v-else @click="handlePreview(option.content)"/>
                 </el-form-item>
               </el-form>
             </el-col>
@@ -48,6 +48,12 @@
       <el-table-column
         label="题目"
         prop="title">
+      </el-table-column>
+      <el-table-column
+        label="图片">
+        <template slot-scope="scope">
+          <img v-if="scope.row.image" :src="scope.row.image + '-mini'" alt="图片" @click="handlePreview(scope.row.image)">
+        </template>
       </el-table-column>
       <el-table-column
         prop="type"
@@ -132,6 +138,10 @@
     <el-dialog title="提示" :visible.sync="questionEditStatus" :fullscreen="true">
       <QuestionEdit :question="questionEditBindQuestion" @updated="questionUpdated" :key="Date.now()"></QuestionEdit>
     </el-dialog>
+    
+    <el-dialog title="预览" :visible.sync="previewStatus" append-to-body>
+      <img :src="previewUrl" alt="预览图片">
+    </el-dialog>
   </div>
 </template>
 
@@ -174,7 +184,9 @@
         defaultSortFields: {
           descending: 'desc',
           ascending: 'asc'
-        }
+        },
+        previewStatus: false,
+        previewUrl: ''
       }
     },
     methods: {
@@ -258,6 +270,10 @@
         }).finally(() => {
           this.loading = false
         })
+      },
+      handlePreview(image) {
+        this.previewUrl = image + '-large'
+        this.previewStatus = true
       }
     }
   }

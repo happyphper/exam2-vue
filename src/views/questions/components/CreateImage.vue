@@ -31,6 +31,25 @@
           </el-form-item>
         </el-col>
       </el-row>
+  
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="题干图片">
+            <el-upload
+              :action="uploadDomain"
+              :on-success="handleQuestionUploadSuccess"
+              :before-upload="handleBeforeUpload"
+              :before-remove="handleBeforeRemove"
+              :file-list="uploadedList"
+              :data="uploadData"
+              :on-preview="handlePreview"
+              :disabled="uploading"
+            >
+              <el-button size="small" type="primary" :loading="uploading">点击上传</el-button>
+            </el-upload>
+          </el-form-item>
+        </el-col>
+      </el-row>
       
       <el-row :gutter="20">
         <el-col :span="12">
@@ -133,6 +152,7 @@
         form: {
           course_id: null,
           title: '',
+          image: null,
           type: 'single',
           optionType: 'image',
           chapter: null,
@@ -200,6 +220,10 @@
             option.right = true
           }
         }
+      },
+      handleQuestionUploadSuccess(res) {
+        this.uploading = false
+        this.form.image = res.key
       },
       handleUploadSuccess(res) {
         this.uploading = false

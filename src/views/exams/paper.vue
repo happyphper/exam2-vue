@@ -15,7 +15,8 @@
             <el-col :span="24">
               <el-form label-position="left" inline>
                 <el-form-item :label="`选项 ${option.id}`">
-                  <span>{{ option.content }}</span>
+                  <span v-if="option.type === 'text'">{{ option.content }}</span>
+                  <img v-else :src="option.content + '-mini'" />
                 </el-form-item>
               </el-form>
             </el-col>
@@ -25,6 +26,13 @@
       <el-table-column
         label="题目"
         prop="title">
+      </el-table-column>
+      <el-table-column
+        label="题干图片"
+        prop="image">
+        <template slot-scope="scope">
+          <img :src="scope.row.image + '-mini'" alt="图片" v-if="scope.row.image">
+        </template>
       </el-table-column>
       <el-table-column
         prop="score"

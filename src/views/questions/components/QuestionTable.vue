@@ -38,7 +38,7 @@
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item :label="`选项 ${option.id}`">
                   <span v-if="option.type === 'text'">{{ option.content }}</span>
-                  <img :src="option.content + '-mini'" alt="选项" v-else @click="handlePreview(option.content)"/>
+                  <img v-else :src="option.content + '-mini'" alt="选项" @click="handlePreview(option.content)"/>
                 </el-form-item>
               </el-form>
             </el-col>

@@ -149,12 +149,12 @@
     props: ['course'],
     data() {
       return {
+        optionType: 'image',
         form: {
           course_id: null,
           title: '',
           image: null,
           type: 'single',
-          optionType: 'image',
           chapter: null,
           section: null,
           options: [

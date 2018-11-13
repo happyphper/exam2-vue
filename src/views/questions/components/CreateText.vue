@@ -137,12 +137,12 @@
     props: ['course'],
     data() {
       return {
+        optionType: 'text',
         form: {
           course_id: null,
           title: '',
           image: null,
           type: 'single',
-          optionType: 'text',
           chapter: null,
           section: null,
           options: [

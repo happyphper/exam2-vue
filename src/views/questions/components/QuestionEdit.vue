@@ -110,6 +110,8 @@
               <el-button @click.prevent="toggleAnswer(option)" :icon="option.right ? 'el-icon-close' : 'el-icon-check'"
                          :type="option.right ? 'danger' : 'success'" circle></el-button>
             </el-tooltip>
+  
+            <el-button @click.prevent="removeOption(option, index)" type="danger">去除选项</el-button>
           </el-col>
         </el-form-item>
       </el-row>
@@ -284,6 +286,17 @@
       },
       handleClick(index) {
         this.optionIndex = index
+      },
+      removeOption(option, index) {
+        if (this.form.options.length <= 2) {
+          this.$message.warning('题目选项至少有 2 个')
+          return false
+        }
+        const answerIndex = this.form.answer.findIndex(item => item === option.id)
+        if (answerIndex >= 0) {
+          this.form.answer.splice(answerIndex, 1)
+        }
+        this.form.options.splice(index, 1)
       }
     }
   }

@@ -17,7 +17,11 @@ export function storeExam(data, params = { include: 'course,classrooms' }) {
   })
 }
 
-export function updateExam(examId, data, params = { include: 'course,classrooms' }) {
+export function updateExam(
+  examId,
+  data,
+  params = { include: 'course,classrooms' }
+) {
   return request({
     url: `/exams/${examId}`,
     method: 'put',
@@ -38,5 +42,12 @@ export function endExam(examId, data) {
     url: `/exams/${examId}/end`,
     method: 'patch',
     data
+  })
+}
+
+export function startExam(examId) {
+  return request({
+    url: `/exams/${examId}/start`,
+    method: 'patch'
   })
 }

@@ -21,13 +21,14 @@
 
     <el-form-item>
       <el-button type="primary" @click="onSubmit">结束考试</el-button>
+      <el-button type="primary" @click="start">开始考试</el-button>
       <el-button @click="resetForm('form')">重置表单</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
-  import { endExam } from '@/api/exams'
+  import { endExam, startExam } from '@/api/exams'
   
   export default {
     name: 'ExamEnd',
@@ -52,6 +53,15 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields()
+      },
+      // 开考
+      start() {
+        this.loading = true
+        startExam(this.exam.id).then(response => {
+          this.$emit('started')
+        }).finally(() => {
+          this.loading = false
+        })
       }
     }
   }

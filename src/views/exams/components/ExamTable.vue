@@ -23,10 +23,12 @@
         label="考试名称"
         prop="title">
       </el-table-column>
+
       <el-table-column
         label="附属课程"
         prop="course.title">
       </el-table-column>
+
       <el-table-column label="关联班级">
         <template slot-scope="scope">
           <el-button size="small" v-for="classroom in scope.row.classrooms.data" :key="classroom.id">
@@ -34,15 +36,18 @@
           </el-button>
         </template>
       </el-table-column>
+
       <el-table-column
         prop="started_at"
         label="开始时间">
       </el-table-column>
+
       <el-table-column
         prop="ended_at"
         label="结束时间"
         sortable="custom">
       </el-table-column>
+
       <el-table-column
         width="100"
         prop="status_translate"
@@ -51,6 +56,7 @@
           <el-button type="primary" size="mini" @click="showExamEndComponent(scope.row)">{{ scope.row.status_translate }}</el-button>
         </template>
       </el-table-column>
+
       <el-table-column
         label="考题">
         <template slot-scope="scope">
@@ -61,6 +67,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
+
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top">
@@ -89,13 +96,15 @@
     <el-dialog title="提示" :visible.sync="examCreateStatus" width="50%">
       <ExamCreate @created="examCreated" :key="Date.now()"></ExamCreate>
     </el-dialog>
+
     <!--EditModal-->
     <el-dialog title="提示" :visible.sync="examEditStatus" width="50%">
       <ExamEdit :exam="examEditBindExam" @updated="examUpdated" :key="Date.now()"></ExamEdit>
     </el-dialog>
-    <!--EditModal-->
+
+    <!--EndModal-->
     <el-dialog title="提示" :visible.sync="examEndBindStatus" width="50%">
-      <ExamEnd :exam="examEndBindExam" @ended="examEnded" :key="Date.now()"></ExamEnd>
+      <ExamEnd :exam="examEndBindExam" @ended="examEnded" @started="examStarted" :key="Date.now()"></ExamEnd>
     </el-dialog>
   </div>
 </template>
@@ -138,6 +147,7 @@
         },
         include: 'classrooms,course',
         loading: false,
+        exam: {},
         examCreateStatus: false,
         examEditStatus: false,
         examEditBindExam: null,
@@ -207,6 +217,7 @@
         })
       },
       showExamEndComponent(exam) {
+        this.exam = exam
         if (exam.status === 'end') {
           return false
         }
@@ -215,7 +226,15 @@
       },
       examEnded() {
         this.examEndBindStatus = false
+        this.exam.status = 'end'
+        this.exam.status_translate = '已结束'
         this.$notify.success({ title: '成功', message: '班级结考成功，未答题学员将无法参加考试' })
+      },
+      examStarted() {
+        this.examEndBindStatus = false
+        this.exam.status = 'ongoing'
+        this.exam.status_translate = '进行中'
+        this.$notify.success({ title: '成功', message: '已开考，请通知学员答题。' })
       }
     }
   }

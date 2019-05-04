@@ -1,29 +1,30 @@
 <template>
   <div>
-    <el-form ref="form" :model="form" label-width="80px" v-loading="loading">
+    <el-form :model="form" label-width="80px" ref="form" v-loading="loading">
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="课程">
             <el-select
-              v-model="form.course_id"
+              :disabled="courseSelectListDisabled"
+              :loading="courseSelectListLoading"
+              :remote-method="fetchCourses"
               filterable
+              placeholder="请输入关键字自动搜索"
               remote
               reserve-keyword
-              :remote-method="fetchCourses"
-              :loading="courseSelectListLoading"
-              placeholder="请输入关键字自动搜索"
-              :disabled="courseSelectListDisabled">
+              v-model="form.course_id"
+            >
               <el-option
-                v-for="course in courseSelectList"
                 :key="course.id"
                 :label="course.title"
-                :value="course.id">
-              </el-option>
+                :value="course.id"
+                v-for="course in courseSelectList"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="题干">
@@ -31,35 +32,35 @@
           </el-form-item>
         </el-col>
       </el-row>
-  
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="题干图片">
             <el-upload
               :action="uploadDomain"
-              :on-success="handleQuestionUploadSuccess"
-              :before-upload="handleBeforeUpload"
               :before-remove="handleBeforeRemove"
-              :file-list="uploadedList"
+              :before-upload="handleBeforeUpload"
               :data="uploadData"
-              :on-preview="handlePreview"
               :disabled="uploading"
+              :file-list="uploadedList"
+              :on-preview="handlePreview"
+              :on-success="handleQuestionUploadSuccess"
             >
-              <el-button size="small" type="primary" :loading="uploading">点击上传</el-button>
+              <el-button :loading="uploading" size="small" type="primary">点击上传</el-button>
             </el-upload>
           </el-form-item>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="类型">
-            <el-radio v-model="form.type" label="single">单选</el-radio>
-            <el-radio v-model="form.type" label="multiple">多选</el-radio>
+            <el-radio label="single" v-model="form.type">单选</el-radio>
+            <el-radio label="multiple" v-model="form.type">多选</el-radio>
           </el-form-item>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="章">
@@ -67,7 +68,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="节">
@@ -75,7 +76,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="答案">
@@ -83,7 +84,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="解析">
@@ -91,205 +92,232 @@
           </el-form-item>
         </el-col>
       </el-row>
-      
-      <el-row :gutter="20" v-for="(option, index) in form.options" :key="index">
+
+      <el-row :gutter="20" :key="index" v-for="(option, index) in form.options">
         <el-form-item :label="`选项 ${option.id}`">
-          <el-input class="hidden" type="hidden" v-model="form.options[index].id" :value="option.id"></el-input>
+          <el-input
+            :value="option.id"
+            class="hidden"
+            type="hidden"
+            v-model="form.options[index].id"
+          ></el-input>
           <el-col :span="12">
             <el-upload
               :action="uploadDomain"
-              :on-success="handleUploadSuccess"
-              :before-upload="handleBeforeUpload"
               :before-remove="handleBeforeRemove"
-              :file-list="uploadedList"
+              :before-upload="handleBeforeUpload"
               :data="uploadData"
-              :on-preview="handlePreview"
               :disabled="uploading"
+              :file-list="uploadedList"
+              :on-preview="handlePreview"
+              :on-success="handleUploadSuccess"
             >
-              <el-button size="small" type="primary" @click="handleClick(index)" :loading="uploading">点击上传</el-button>
+              <el-button
+                :loading="uploading"
+                @click="handleClick(index)"
+                size="small"
+                type="primary"
+              >点击上传</el-button>
             </el-upload>
           </el-col>
           <el-col :span="6">
-            <el-tooltip class="item" effect="dark" :content="option.right ? '取消正确答案' : '设置正确答案'" placement="top">
-              <el-button @click.prevent="toggleAnswer(option)" :icon="option.right ? 'el-icon-close' : 'el-icon-check'"
-                         :type="option.right ? 'danger' : 'success'" circle></el-button>
+            <el-tooltip
+              :content="option.right ? '取消正确答案' : '设置正确答案'"
+              class="item"
+              effect="dark"
+              placement="top"
+            >
+              <el-button
+                :icon="option.right ? 'el-icon-check' : 'el-icon-close'"
+                :type="option.right ? 'success' : 'danger'"
+                @click.prevent="toggleAnswer(option)"
+                circle
+              ></el-button>
             </el-tooltip>
-            
+
             <el-button @click.prevent="removeOption(option, index)" type="danger">去除选项</el-button>
           </el-col>
         </el-form-item>
       </el-row>
-      
+
       <el-form-item>
         <el-button @click.prevent="addOption()" type="success">新增选项</el-button>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button @click="onSubmit" type="primary">立即创建</el-button>
       </el-form-item>
     </el-form>
-    
-    <el-dialog title="预览" :visible.sync="previewStatus" append-to-body>
+
+    <el-dialog :visible.sync="previewStatus" append-to-body title="预览">
       <img :src="previewUrl" alt="预览图片" width="300">
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import { storeQuestion } from '@/api/questions'
-  import { getCourses } from '@/api/courses'
-  import { getToken, deleteImage } from '@/api/cloudStorage'
-  
-  export default {
-    name: 'QuestionImage',
-    created() {
-      if (this.course) {
-        this.courseSelectList.push(this.course)
-        this.form.course_id = this.course.id
-        this.courseSelectListDisabled = true
-      }
-    },
-    props: ['course'],
-    data() {
-      return {
-        optionType: 'image',
-        form: {
-          course_id: null,
-          title: '',
-          image: null,
-          type: 'single',
-          chapter: null,
-          section: null,
-          options: [
-            { id: 1, content: '', type: 'image', right: false },
-            { id: 2, content: '', type: 'image', right: false },
-            { id: 3, content: '', type: 'image', right: false },
-            { id: 4, content: '', type: 'image', right: false }
-          ],
-          answer: [],
-          explain: ''
-        },
-        loading: false,
-        courseSelectList: [],
-        courseSelectListLoading: false,
-        courseSelectListDisabled: false,
-        uploadDomain: 'http://upload.qiniu.com/',
-        uploadData: {
-          token: '',
-          key: ''
-        },
-        uploadedList: [],
-        uploading: false,
-        optionIndex: 0,
-        previewStatus: false,
-        previewUrl: ''
-      }
-    },
-    methods: {
-      fetchCourses(query) {
-        this.courseSelectListLoading = true
-        getCourses({ title: `%${query}%`, per_page: 100 }).then(response => {
+import { storeQuestion } from '@/api/questions'
+import { getCourses } from '@/api/courses'
+import { getToken, deleteImage } from '@/api/cloudStorage'
+
+export default {
+  name: 'QuestionImage',
+  created() {
+    if (this.course) {
+      this.courseSelectList.push(this.course)
+      this.form.course_id = this.course.id
+      this.courseSelectListDisabled = true
+    }
+  },
+  props: ['course'],
+  data() {
+    return {
+      optionType: 'image',
+      form: {
+        course_id: null,
+        title: '',
+        image: null,
+        type: 'single',
+        chapter: null,
+        section: null,
+        options: [
+          { id: 1, content: '', type: 'image', right: false },
+          { id: 2, content: '', type: 'image', right: false },
+          { id: 3, content: '', type: 'image', right: false },
+          { id: 4, content: '', type: 'image', right: false }
+        ],
+        answer: [],
+        explain: ''
+      },
+      loading: false,
+      courseSelectList: [],
+      courseSelectListLoading: false,
+      courseSelectListDisabled: false,
+      uploadDomain: 'http://upload.qiniu.com/',
+      uploadData: {
+        token: '',
+        key: ''
+      },
+      uploadedList: [],
+      uploading: false,
+      optionIndex: 0,
+      previewStatus: false,
+      previewUrl: ''
+    }
+  },
+  methods: {
+    fetchCourses(query) {
+      this.courseSelectListLoading = true
+      getCourses({ title: `%${query}%`, per_page: 100 })
+        .then(response => {
           this.courseSelectList = response.data
-        }).finally(() => {
+        })
+        .finally(() => {
           this.courseSelectListLoading = false
         })
-      },
-      onSubmit() {
-        this.loading = true
-        storeQuestion(this.form).then((response) => {
+    },
+    onSubmit() {
+      this.loading = true
+      storeQuestion(this.form)
+        .then(response => {
           this.$message.success('添加成功')
           this.$emit('imageCreated', response)
-        }).finally(() => {
+        })
+        .finally(() => {
           this.loading = false
         })
-      },
-      toggleAnswer(option) {
-        // 单选
-        if (this.form.type === 'single') {
-          if (this.form.answer.includes(option.id)) {
-            this.form.answer.splice(this.form.answer.indexOf(option.id), 1)
-            option.right = false
-          } else {
-            this.form.answer.length < 1 && this.form.answer.push(option.id) && (option.right = true)
-          }
+    },
+    toggleAnswer(option) {
+      // 单选
+      if (this.form.type === 'single') {
+        if (this.form.answer.includes(option.id)) {
+          this.form.answer.splice(this.form.answer.indexOf(option.id), 1)
+          option.right = false
+        } else {
+          this.form.answer.length < 1 &&
+            this.form.answer.push(option.id) &&
+            (option.right = true)
         }
-        // 多选
-        if (this.form.type === 'multiple') {
-          if (this.form.answer.includes(option.id)) {
-            this.form.answer.splice(this.form.answer.indexOf(option.id), 1)
-            option.right = false
-          } else {
-            this.form.answer.push(option.id)
-            option.right = true
-          }
+      }
+      // 多选
+      if (this.form.type === 'multiple') {
+        if (this.form.answer.includes(option.id)) {
+          this.form.answer.splice(this.form.answer.indexOf(option.id), 1)
+          option.right = false
+        } else {
+          this.form.answer.push(option.id)
+          option.right = true
         }
-      },
-      handleQuestionUploadSuccess(res) {
-        this.uploading = false
-        this.form.image = res.key
-      },
-      handleUploadSuccess(res) {
-        this.uploading = false
-        this.form.options[this.optionIndex].content = res.key
-      },
-      handleClick(index) {
-        this.optionIndex = index
-      },
-      handleBeforeUpload() {
-        this.uploading = true
-        return getToken().then(response => {
+      }
+    },
+    handleQuestionUploadSuccess(res) {
+      this.uploading = false
+      this.form.image = res.key
+    },
+    handleUploadSuccess(res) {
+      this.uploading = false
+      this.form.options[this.optionIndex].content = res.key
+    },
+    handleClick(index) {
+      this.optionIndex = index
+    },
+    handleBeforeUpload() {
+      this.uploading = true
+      return getToken()
+        .then(response => {
           this.uploadData.token = response.token
           this.uploadData.key = response.name
-        }).catch(err => {
+        })
+        .catch(err => {
           console.log(err)
           return false
         })
-      },
-      handleBeforeRemove(file, fileList) {
-        this.form.options.forEach(item => {
-          if (item.content === file.response.key) {
-            item.content = null
-          }
-        })
-        deleteImage(file.response.key)
-        return true
-      },
-      handlePreview(file) {
-        this.previewUrl = file.url
-        this.previewStatus = true
-      },
-      addOption() {
-        let maxId = 0
-        if (this.form.options.length === 0) {
-          maxId = 0
-        } else {
-          const maxItem = this.form.options.reduce((prev, current) => {
-            return prev.id > current.id ? prev : current
-          })
-          maxId = maxItem.id
+    },
+    handleBeforeRemove(file, fileList) {
+      this.form.options.forEach(item => {
+        if (item.content === file.response.key) {
+          item.content = null
         }
-        this.form.options.push({
-          id: maxId + 1,
-          content: '',
-          type: this.optionType,
-          right: false
+      })
+      deleteImage(file.response.key)
+      return true
+    },
+    handlePreview(file) {
+      this.previewUrl = file.url
+      this.previewStatus = true
+    },
+    addOption() {
+      let maxId = 0
+      if (this.form.options.length === 0) {
+        maxId = 0
+      } else {
+        const maxItem = this.form.options.reduce((prev, current) => {
+          return prev.id > current.id ? prev : current
         })
-      },
-      removeOption(option, index) {
-        const answerIndex = this.form.answer.findIndex(item => item === option.id)
-        if (answerIndex >= 0) {
-          this.form.answer.splice(answerIndex, 1)
-        }
-        this.form.options.splice(index, 1)
+        maxId = maxItem.id
       }
+      this.form.options.push({
+        id: maxId + 1,
+        content: '',
+        type: this.optionType,
+        right: false
+      })
+    },
+    removeOption(option, index) {
+      const answerIndex = this.form.answer.findIndex(item => item === option.id)
+      if (answerIndex >= 0) {
+        this.form.answer.splice(answerIndex, 1)
+      }
+      this.form.options.splice(index, 1)
     }
   }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .block {
-    width: 100%;
-    text-align: center;
-  }
-  
-  .search-bar {
-    padding: 10px 0 10px 0;
-  }
+.block {
+  width: 100%;
+  text-align: center;
+}
+
+.search-bar {
+  padding: 10px 0 10px 0;
+}
 </style>

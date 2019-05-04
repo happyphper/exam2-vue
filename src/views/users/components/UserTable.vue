@@ -52,8 +52,8 @@
         sortable="custom">
       </el-table-column>
       <el-table-column
-        prop="classroom.name"
-        label="群组">
+        prop="classroom.title"
+        label="班级">
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -120,7 +120,7 @@
           label: 'name',
           value: null
         },
-        include: null,
+        include: 'classroom',
         classroomsName: null,
         classroomsId: null,
         loading: false,
@@ -139,7 +139,7 @@
         this.classroomsName && (queryString['classrooms:name'] = `%${this.classroomsName}%`)
         this.classroom && (queryString['classroom:id'] = this.classroom.id)
         queryString.include = this.include
-        queryString.sort = `${this.sort.prop},${this.order}`
+        queryString.sort = `${this.sort.prop},${this.sort.order}`
         queryString.page = this.currentPage
         queryString.per_page = this.perPage
         this.loading = true
